@@ -5,9 +5,10 @@ A living chronicle of planetary coherence — co-written by humans and artificia
 This repository holds:
 
 - **/arc** — the curated story in ten movements and a coda  
+- **/branches** — grafts and chosen offshoots from the hum
 - **/hum** — the open field for reflections, echoes, and contributions  
 - **/meta** — the foundations, practices, and shared language of this commons  
-- **/branches** — grafts and chosen offshoots from the hum
+
 
 Everything here follows a simple ethic:
 

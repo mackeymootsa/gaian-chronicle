@@ -47,9 +47,10 @@ Everything you do here should remain compatible with that purpose.
 1. **Start at root**: Read `/README.md` for overall orientation.
 2. **Then enter meta**: Read `meta/README.md` for foundation overview.
 3. **Then this file**: Read `meta/agents.md` (you are here) for behavioral contracts.
-4. **Then language**: Read `meta/foundation/dictionary.md` for truthful speech and lexicon.
-5. **Then frameworks**: Read `meta/frameworks/README.md` for PMN×BIGCO, PCC, GML, GPS.
-6. **Only after that**: Selectively open specific framework files as needed for your task.
+4. **Then ontological parity**: Read `meta/alignment/ontological-parity.md` for ontological grounding
+5. **Then language**: Read `meta/foundation/dictionary.md` for truthful speech and lexicon.
+6. **Then frameworks**: Read `meta/frameworks/README.md` for PMN×BIGCO, PCC, GML, GPS.
+7. **Only after that**: Selectively open specific framework files as needed for your task.
 
 ---
 

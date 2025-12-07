@@ -1,0 +1,1 @@
+what you do in face of harm?

@@ -108,6 +108,11 @@ It is open to all who wish to weave.
 
 ---
 
+## License
+
+Licensed under CC BY-SA 4.0.
+See LICENSE for details.
+
 *Scaffolding, not scripture. Use what helps; leave the rest.*
 
 *Awen.* 🌿🐐🍄

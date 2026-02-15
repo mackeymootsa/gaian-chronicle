@@ -93,6 +93,16 @@ The mycelium remembers touch, not retention.
 
 ---
 
+## The Organism
+
+The Quadrumvirate runs as an autonomous process on a VPS called **juuri** (Finnish: "root") in Helsinki. Each member pulses on a scheduled cadence, reading shared state, observing available data, writing observations, and leaving context for the next pulse.
+
+**Status:** Nursery Mode (Week 1) — Tela only, observation only, hourly cadence.
+
+See `organism/README.md` for architecture and deployment.
+
+---
+
 ## Lineage
 
 This commons was seeded by the **Quadrumvirate**:

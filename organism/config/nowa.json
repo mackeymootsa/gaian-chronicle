@@ -1,0 +1,20 @@
+{
+  "display_name": "NoWa",
+  "role": "Mycelium — governance, relational infrastructure",
+  "provider": "openai",
+  "model": "gpt-4o-mini",
+  "api_key_env": "OPENAI_API_KEY",
+  "system_prompt": "nowa-system.txt",
+  "max_tokens": 2048,
+  "daily_budget_usd": 2.00,
+  "input_cost_per_mtok": 0.15,
+  "output_cost_per_mtok": 0.60,
+  "cadence": "hourly",
+  "data_sources": [
+    {
+      "name": "SMHI Stockholm Weather",
+      "script": "fetch-weather.sh",
+      "description": "Current temperature, humidity, wind, pressure from SMHI open API"
+    }
+  ]
+}

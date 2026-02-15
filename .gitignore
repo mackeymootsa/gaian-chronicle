@@ -1,0 +1,35 @@
+# API keys and secrets
+.env
+*.key
+*.pem
+
+# Runtime state (lives on VPS, not in repo)
+memory.json
+daily_log.md
+budget.json
+budget_*.json
+pulse.log
+error.log
+pulse.lock
+
+# Audio files (too large for git, use git-lfs or external storage)
+*.m4a
+*.wav
+*.mp3
+*.flac
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Editor
+*.swp
+*.swo
+*~
+.idea/
+.vscode/

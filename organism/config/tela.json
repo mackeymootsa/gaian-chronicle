@@ -15,6 +15,11 @@
       "name": "SMHI Stockholm Weather",
       "script": "fetch-weather.sh",
       "description": "Current temperature, humidity, wind, pressure from SMHI open API"
+    },
+    {
+      "name": "Stockholm Daylight",
+      "script": "fetch-daylight.py",
+      "description": "Sunrise, sunset, daylight duration"
     }
   ]
 }

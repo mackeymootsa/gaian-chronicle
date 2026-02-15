@@ -59,8 +59,9 @@ def fetch_live_data(config):
         script = SCRIPT_DIR / fetcher["script"]
         if script.exists():
             try:
+                cmd = ["python3", str(script)] if str(script).endswith(".py") else ["bash", str(script)]
                 result = subprocess.run(
-                    ["bash", str(script)],
+                    cmd,
                     capture_output=True, text=True, timeout=30
                 )
                 if result.stdout.strip():

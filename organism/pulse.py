@@ -347,14 +347,32 @@ Respond with ONLY a JSON object (no markdown fences, no preamble, no text outsid
         clean = clean[:-3]
     clean = clean.strip()
 
+    # Fix unescaped newlines inside JSON string values (Haiku outputs literal newlines)
+    def _repair_json(s):
+        out, in_str, esc = [], False, False
+        for c in s:
+            if esc:
+                out.append(c); esc = False; continue
+            if c == '\\':
+                esc = True; out.append(c); continue
+            if c == '"':
+                in_str = not in_str; out.append(c); continue
+            if in_str and c == '\n':
+                out.append('\\n'); continue
+            out.append(c)
+        return ''.join(out)
+
     try:
         response = json.loads(clean)
-    except json.JSONDecodeError as e:
-        append_to_log(daily_log,
-            f"### {now_utc} UTC\n**Status:** DEGRADED\n"
-            f"**Notes:** Response not valid JSON: {e}")
-        log_to(error_log, f"JSON_ERROR: {e}\nRaw: {text[:500]}")
-        return
+    except json.JSONDecodeError:
+        try:
+            response = json.loads(_repair_json(clean))
+        except json.JSONDecodeError as e:
+            append_to_log(daily_log,
+                f"### {now_utc} UTC\n**Status:** DEGRADED\n"
+                f"**Notes:** Response not valid JSON: {e}")
+            log_to(error_log, f"JSON_ERROR: {e}\nRaw: {text[:500]}")
+            return
 
     log_entry = response.get("log_entry", "")
     memory_update = response.get("memory")

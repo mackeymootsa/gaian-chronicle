@@ -20,6 +20,11 @@
       "name": "Stockholm Daylight",
       "script": "fetch-daylight.py",
       "description": "Sunrise, sunset, daylight duration"
+    },
+    {
+      "name": "Repository Activity",
+      "script": "fetch-git-activity.sh",
+      "description": "Recent git commits to gaian-chronicle repo"
     }
   ]
 }

@@ -34,7 +34,7 @@ def log_to(filepath, msg):
 
 def append_to_log(log_file, entry):
     with open(log_file, "a") as f:
-        f.write(f"\n{entry}\n\n---\n\n")
+        f.write(f"{entry.strip()}\n\n---\n\n")
 
 
 def load_config(mind_name):

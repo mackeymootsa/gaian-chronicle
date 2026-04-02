@@ -318,7 +318,7 @@ def run_pulse(config, mind_name, api_key, mind_dir, memory_file, daily_log,
 4. Think about what the next pulse (also you) needs to know.
 
 Respond with ONLY a JSON object (no markdown fences, no preamble, no text outside the JSON):
-{{"log_entry": "your markdown log entry (use ### HH:MM UTC format)", "memory": {{"pulse_count": N, "last_pulse": "ISO8601", "observations": ["list"], "threads": ["list"], "notes": "for next pulse"}}}}"""
+{{"log_entry": "your markdown log entry (use ### HH:MM UTC format)", "memory": {{"pulse_count": N, "last_pulse": "ISO8601", "observations": ["list"], "threads": ["list"], "notes": "for next pulse", "buffer": ["optional list of messages for Nova"]}}}}"""
 
     # -- Call API --
     caller = API_CALLERS.get(provider)

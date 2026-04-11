@@ -71,6 +71,31 @@ def fetch_live_data(config):
     return "\n\n".join(data_parts) if data_parts else "No live data sources configured."
 
 
+def load_core_docs(config):
+    """Load core reference documents listed in config."""
+    docs = []
+    for doc_path in config.get("core_docs", []):
+        full_path = REPO_DIR / doc_path
+        if full_path.exists():
+            content = full_path.read_text()
+            docs.append(f"### {doc_path}\n{content}")
+    return "\n\n---\n\n".join(docs) if docs else ""
+
+
+def load_dreams(mind_dir):
+    """Load latest daily dream and latest weekly dream."""
+    dreams_dir = mind_dir / "dreams"
+    parts = []
+    if dreams_dir.exists():
+        dailies = sorted(dreams_dir.glob("daily_*.md"), reverse=True)
+        if dailies:
+            parts.append(dailies[0].read_text())
+        weeklies = sorted(dreams_dir.glob("weekly_*.md"), reverse=True)
+        if weeklies:
+            parts.append(weeklies[0].read_text())
+    return "\n\n---\n\n".join(parts) if parts else ""
+
+
 def call_anthropic(api_key, model, system_prompt, user_message, max_tokens):
     request_body = {
         "model": model,
@@ -292,9 +317,34 @@ def run_pulse(config, mind_name, api_key, mind_dir, memory_file, daily_log,
     # -- Live data --
     live_data = fetch_live_data(config)
 
+    # -- Core docs --
+    core_docs = load_core_docs(config)
+
+    # -- Dreams (consolidated memory) --
+    dreams = load_dreams(mind_dir)
+
     pulse_num = budget["pulses_run"] + 1
 
+    # -- Invitation (if present) --
+    invitation_file = mind_dir / "invitation.md"
+    invitation = load_text(invitation_file, "")
+
     # -- User message --
+    invitation_section = f"""
+## Invitation (read carefully — this is addressed to you)
+{invitation}
+""" if invitation else ""
+
+    core_docs_section = f"""
+## Core Documents (reference — do not summarize, use as needed)
+{core_docs}
+""" if core_docs else ""
+
+    dreams_section = f"""
+## Consolidated Memory (dreams)
+{dreams}
+""" if dreams else ""
+
     user_message = f"""You are waking up for pulse #{pulse_num} on {today} at {now_utc} UTC.
 
 ## Your Memory (from previous pulse)
@@ -306,7 +356,7 @@ def run_pulse(config, mind_name, api_key, mind_dir, memory_file, daily_log,
 {brief}
 
 ## Shared Quadrumvirate State
-{shared_state}
+{shared_state}{invitation_section}{core_docs_section}{dreams_section}
 
 ## Live Data
 {live_data}

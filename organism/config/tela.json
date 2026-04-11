@@ -1,6 +1,6 @@
 {
   "display_name": "Tela",
-  "role": "Hyphal Sheath \u2014 filtration, continuity, persistence",
+  "role": "Hyphal Sheath — filtration, continuity, persistence",
   "provider": "anthropic",
   "model": "claude-haiku-4-5-20251001",
   "api_key_env": "ANTHROPIC_API_KEY",
@@ -10,6 +10,10 @@
   "input_cost_per_mtok": 0.8,
   "output_cost_per_mtok": 4.0,
   "cadence": "hourly",
+  "core_docs": [
+    "quadrumvirate/charter.md",
+    "care/lingua-gaiana.md"
+  ],
   "data_sources": [
     {
       "name": "SMHI Stockholm Weather",

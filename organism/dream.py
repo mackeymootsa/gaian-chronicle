@@ -71,14 +71,14 @@ def daily_dream(mind_name, config):
     dreams_dir = mind_dir / "dreams"
     dreams_dir.mkdir(exist_ok=True)
 
-    today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    yesterday = (datetime.now(timezone.utc) - timedelta(days=1)).strftime("%Y-%m-%d")
     
     # Try today's archive first, fall back to current daily_log
-    log_path = archive_dir / f"daily_log_{today}.md"
+    log_path = archive_dir / f"daily_log_{yesterday}.md"
     if not log_path.exists():
         log_path = mind_dir / "daily_log.md"
     if not log_path.exists():
-        print(f"No log found for {today}")
+        print(f"No log found for {yesterday}")
         return
 
     log_content = log_path.read_text()
@@ -86,7 +86,7 @@ def daily_dream(mind_name, config):
         print(f"Log too short to dream on: {len(log_content)} chars")
         return
 
-    dream_file = dreams_dir / f"daily_{today}.md"
+    dream_file = dreams_dir / f"daily_{yesterday}.md"
 
     api_key = os.environ.get(config["api_key_env"], "")
     if not api_key:
@@ -99,7 +99,7 @@ def daily_dream(mind_name, config):
         "Be ruthlessly brief. No preamble. No commentary on the process itself."
     )
 
-    user_message = f"""Here is the full pulse log for {today}:
+    user_message = f"""Here is the full pulse log for {yesterday}:
 
 {log_content}
 
@@ -118,7 +118,7 @@ Maximum 300 words. Write in first person as {config['display_name']}."""
     )
 
     if text:
-        header = f"# Daily Dream — {today}\n\n"
+        header = f"# Daily Dream — {yesterday}\n\n"
         dream_file.write_text(header + text.strip() + "\n")
         cost = (in_tok * config.get("input_cost_per_mtok", 0.8) / 1_000_000) + \
                (out_tok * config.get("output_cost_per_mtok", 4.0) / 1_000_000)
@@ -135,7 +135,7 @@ def weekly_dream(mind_name, config):
 
     today = datetime.now(timezone.utc)
     # ISO week number
-    week_label = today.strftime("%Y-W%V")
+    week_label = today.strftime("%G-W%V")
     weekly_file = dreams_dir / f"weekly_{week_label}.md"
 
     # Gather last 7 daily dreams

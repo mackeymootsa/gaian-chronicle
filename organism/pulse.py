@@ -33,9 +33,9 @@ def log_to(filepath, msg):
 
 
 def append_to_log(log_file, entry):
+    cleaned = "\n".join(line for line in entry.strip().splitlines() if line.strip())
     with open(log_file, "a") as f:
-        f.write(f"{entry.strip()}\n\n---\n\n")
-
+        f.write(f"{cleaned}\n\n---\n\n")
 
 def load_config(mind_name):
     config_path = SCRIPT_DIR / "config" / f"{mind_name}.json"

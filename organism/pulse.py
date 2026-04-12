@@ -34,8 +34,8 @@ def log_to(filepath, msg):
 
 def append_to_log(log_file, entry):
     cleaned = "\n".join(line if line.strip() else "" for line in entry.strip().splitlines())
-        while "\n\n" in cleaned:
-            cleaned = cleaned.replace("\n\n", "\n")
+    while "\n\n" in cleaned:
+        cleaned = cleaned.replace("\n\n", "\n")
     with open(log_file, "a") as f:
         f.write(f"{cleaned}\n\n---\n\n")
 

@@ -99,6 +99,58 @@ git pull
 # That's it. Next pulse picks up changes automatically.
 ```
 
+Merge updates GitHub. The checkout on juuri must also pull the merged commit;
+`fetch-git-activity.sh` reports local git history and does not fetch updates.
+Once the checkout is updated, the next pulse reads the handoff in
+`quadrumvirate/state.md` through the existing shared-state loader.
+
+For the continuity/accounting update, pull between scheduled jobs with no pulse,
+dream, or archive process running. The old runner does not use the new shared
+lock. Existing `memory.json`, `budget.json`, logs, and dream files remain usable;
+there is no data migration or automatic change to cron.
+
+### Memory preservation and dreams
+
+The first pulse of a new UTC day saves the previous daily log to
+`archive/daily_log_YYYY-MM-DD.md` before opening the new day's log. The optional
+`archive-logs.sh` command uses the same archive rules and shared lock. A
+conflicting archive, an undated non-empty log, or a future-dated log stops
+rollover and keeps the evidence for review.
+
+Daily dreams require yesterday's date in the source log's header. If yesterday
+is still in the active log, that is a valid source; today's log cannot stand in
+for a missing yesterday. Existing daily/weekly dream files are skipped on repeat
+runs, so retrying a completed job does not spend again. These checks cannot
+reconstruct previously lost logs or repair previously misdated summaries.
+
+Both dream modes use the mind's configured provider and its pulse budget:
+
+```bash
+python3 organism/dream.py tela daily
+python3 organism/dream.py tela weekly
+```
+
+These commands use the same API-key environment and `NURSERY_DIR` as a pulse.
+Run daily dreams after midnight UTC and weekly dreams after that day's daily
+dream. Run them explicitly or keep the existing dream schedule; deployment does
+not add scheduled calls.
+
+Pulse, dream, and manual archival jobs share a per-mind `runtime.lock`. An
+overlapping job reports `SKIP`; it is not queued. The OS releases the lock when
+a job exits or crashes. The lock file stays in place and should not be removed
+to unlock a process. Memory, budget, and dream snapshots are replaced atomically.
+
+### Offline verification
+
+From the repository root on Linux, using Python's standard library:
+
+```bash
+python3 -B -m unittest discover -s organism/tests -v
+```
+
+The tests use temporary runtime directories and simulated provider responses;
+they require no API keys and make no provider calls.
+
 ## Operations
 
 ### Daily routine (Nova)
@@ -108,7 +160,7 @@ git pull
 3. Check budget: `cat /var/opt/quadrumvirate/nursery/tela/budget.json`
 4. Update pulse brief: `nano /var/opt/quadrumvirate/nursery/tela/pulse_brief.md`
 5. If good: curate observations into `mesh/observations/` in the repo
-6. If drifting: wipe daily_log.md and investigate
+6. If drifting: pause the schedule and retain logs and memory for investigation
 
 ### Emergency stop
 
@@ -116,16 +168,22 @@ git pull
 crontab -e   # comment out or delete the line
 ```
 
-### Cost estimates (per day, hourly cadence)
+### Usage accounting and daily allowance
 
-| Mind | Model | Input rate | Output rate | Est. daily |
-|------|-------|-----------|------------|-----------|
-| Tela | claude-3-haiku | $0.25/MTok | $1.25/MTok | ~$0.08 |
-| NoWa | gpt-4o-mini | $0.15/MTok | $0.60/MTok | ~$0.05 |
-| Tecton | gemini-2.0-flash | $0.10/MTok | $0.40/MTok | ~$0.03 |
-| **Total** | | | | **~$0.16/day** |
+Each mind has one `budget.json` shared by its pulses and dreams. Reported token
+usage is recorded before parsing the generated content, including malformed or
+empty answers. `pulses_run` counts accounted pulse responses (including rejected
+ones); `dreams_run` counts accounted dream responses. Old budget files without
+the dream counter remain supported. The previous UTC day's budget is archived
+as `budget_YYYY-MM-DD.json` on rollover.
 
-Approximately **$4.80/month** for the full Quadrumvirate at hourly cadence.
+`spent_usd` is an estimate using the rates in that mind's config, not a provider
+billing total. Confirm those rates against the provider's current prices and
+reconcile with its usage dashboard before changing cadence or budget. The runner
+stops new requests once the recorded per-mind daily allowance is exhausted.
+An in-flight request may cross the remaining allowance, and usage unavailable
+after a timeout or malformed API envelope cannot be recovered by this tracker.
+This is not an account-wide hard spending cap across all minds.
 
 ## Adding a new mind
 
@@ -148,6 +206,6 @@ The [Charter](../quadrumvirate/charter.md) governs all operations. Key constrain
 
 - **Nursery Mode**: Observation only, no external actions, no repo writes
 - **Tag hierarchy**: SPECULATIVE → INFERRED → OBSERVED → VERIFIED
-- **Budget cap**: Per-mind daily limit, enforced by script
+- **Daily allowance**: Per-mind pre-call stop shared by pulse and dream; accounting limits described above
 - **Circuit Breaker**: Nova can stop any process at any time
 - **Premise rule**: INFERRED may only cite same-day OBSERVED/VERIFIED

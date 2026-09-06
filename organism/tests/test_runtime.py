@@ -16,6 +16,7 @@ ORGANISM = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ORGANISM))
 
 import dream
+import entry
 import pulse
 import runtime
 
@@ -74,6 +75,9 @@ class RuntimeTests(unittest.TestCase):
     def budget(self):
         return json.loads((self.mind / "budget.json").read_text())
 
+    def entries(self):
+        return list(entry.read_entries(self.root / "entries"))
+
     def seed_budget(self, day=None, spent=0):
         # The pre-existing format has no dreams_run field.
         value = {"date": day or self.today, "spent_usd": spent, "pulses_run": 3,
@@ -123,7 +127,7 @@ class RuntimeTests(unittest.TestCase):
         memory = self.mind / "memory.json"
         memory.write_text('{"notes": "keep this question"}')
         responses = ("not JSON", "[]", '{"log_entry": "text", "memory": []}',
-                     '{"log_entry": 42, "memory": {}}', "")
+                     '{"log_entry": 42, "memory": {}}', "", "   ")
         for count, response in enumerate(responses, 1):
             with self.subTest(response=response):
                 self.api.return_value = (response, "200", 1000, 100)
@@ -179,8 +183,10 @@ class RuntimeTests(unittest.TestCase):
         self.api.return_value = ("A grounded summary.", "200", 1000, 100)
         self.dream()
         self.dream("weekly")
+        records_before_retry = self.entries()
         self.dream()
         self.dream("weekly")
+        self.assertEqual(self.entries(), records_before_retry)
         self.assertEqual(self.api.call_count, 3)
         self.assertEqual(self.budget()["pulses_run"], 1)
         self.assertEqual(self.budget()["dreams_run"], 2)
@@ -237,6 +243,123 @@ class RuntimeTests(unittest.TestCase):
                 runtime.atomic_write(memory, "new state")
         self.assertEqual(memory.read_text(), "previous state")
         self.assertEqual(list(self.mind.iterdir()), [memory])
+
+    def test_sources_are_saved_before_generation_and_linked_to_memory(self):
+        self.config["data_sources"] = [{"script": "fetch-weather.sh", "name": "Test weather", "epistemic_tag": "FETCHED"}]
+        source_text = "Temperature: 3 C\nSource timestamp: 2026-01-05T00:00:00Z\n"
+        def respond(*args):
+            records = self.entries()
+            self.assertEqual(len(records), 1)
+            self.assertEqual(records[0]["content"], source_text)
+            self.assertIn(records[0]["entry_id"], args[3])
+            return self.reply, "200", 1000, 100
+        self.api.side_effect = respond
+        result = Mock(stdout=source_text, stderr="", returncode=0)
+        with patch.object(pulse.subprocess, "run", return_value=result):
+            self.pulse()
+        source, response, interpretation = self.entries()
+        self.assertEqual(source["epistemic_tag"], "FETCHED")
+        self.assertEqual(source["source_refs"], ["fetch-weather.sh"])
+        self.assertEqual(response["source_refs"], [source["entry_id"]])
+        self.assertEqual(interpretation["source_refs"], [response["entry_id"]])
+        self.assertEqual(interpretation["epistemic_tag"], "UNKNOWN")
+        self.assertEqual({item["pulse_id"] for item in self.entries()}, {source["pulse_id"]})
+        memory = json.loads((self.mind / "memory.json").read_text())
+        self.assertEqual(memory["last_entry_id"], interpretation["entry_id"])
+        self.assertIn(interpretation["entry_id"], (self.mind / "daily_log.md").read_text())
+
+    def test_source_failures_are_preserved_with_unknown_status(self):
+        self.config["data_sources"] = [{"script": "fetch-weather.sh", "name": "Test weather", "epistemic_tag": "FETCHED"}]
+        responses = (Mock(stdout="Partial data", stderr="upstream failure", returncode=2),
+                     Mock(stdout="", stderr="", returncode=0),
+                     subprocess.TimeoutExpired("fetch-weather.sh", 30, output=b"Partial before timeout"))
+        for result in responses:
+            with self.subTest(result=result):
+                mock_args = {"side_effect": result} if isinstance(result, Exception) else {"return_value": result}
+                with patch.object(pulse.subprocess, "run", **mock_args):
+                    self.pulse()
+                source = [item for item in self.entries() if item["entry_kind"] == "observation"][-1]
+                self.assertEqual(source["epistemic_tag"], "UNKNOWN")
+                self.assertTrue(source["payload"]["error"])
+                self.assertIn("Source failure", self.api.call_args.args[3])
+
+    def test_source_record_survives_api_failure(self):
+        self.config["data_sources"] = [{"script": "fetch-weather.sh", "epistemic_tag": "FETCHED"}]
+        self.api.return_value = (None, "503", 0, 0)
+        memory = self.mind / "memory.json"
+        memory.write_text('{"notes": "previous question"}')
+        result = Mock(stdout="A source observation", stderr="", returncode=0)
+        with patch.object(pulse.subprocess, "run", return_value=result):
+            self.pulse()
+        source, response = self.entries()
+        self.assertEqual(source["content"], "A source observation")
+        self.assertEqual(response["payload"]["http_code"], "503")
+        self.assertEqual(response["source_refs"], [source["entry_id"]])
+        self.assertEqual(json.loads(memory.read_text())["notes"], "previous question")
+
+    def test_missing_script_is_an_explicit_observation(self):
+        self.config["data_sources"] = [{"script": "does-not-exist.sh", "epistemic_tag": "FETCHED"}]
+        self.pulse()
+        source = self.entries()[0]
+        self.assertEqual(source["epistemic_tag"], "UNKNOWN")
+        self.assertIn("not found", source["content"])
+
+    def test_fetcher_cannot_promote_its_output_to_verified(self):
+        self.config["data_sources"] = [{"script": "fetch-weather.sh", "epistemic_tag": "VERIFIED"}]
+        result = Mock(stdout="[VERIFIED] A claim inside source text", stderr="", returncode=0)
+        with patch.object(pulse.subprocess, "run", return_value=result):
+            self.pulse()
+        self.assertEqual(self.entries()[0]["epistemic_tag"], "UNKNOWN")
+
+    def test_unparseable_model_output_is_preserved_as_a_trace(self):
+        self.api.return_value = ("not JSON", "200", 1000, 100)
+        self.pulse()
+        record, = self.entries()
+        self.assertEqual(record["entry_kind"], "trace")
+        self.assertEqual(record["content"], "not JSON")
+        self.assertEqual(record["epistemic_tag"], "UNKNOWN")
+        self.assertEqual(self.budget()["input_tokens"], 1000)
+
+    def test_journal_failure_before_fetch_record_prevents_model_call(self):
+        self.config["data_sources"] = [{"script": "does-not-exist.sh"}]
+        with patch.object(pulse, "entry_append", side_effect=OSError("simulated full disk")):
+            with self.assertRaises(OSError):
+                self.pulse()
+        self.api.assert_not_called()
+        self.assertIn("ENTRY_ERROR", (self.mind / "error.log").read_text())
+
+    def test_failed_interpretation_append_keeps_memory_and_accounts_usage(self):
+        memory = self.mind / "memory.json"
+        memory.write_text('{"notes": "keep this question"}')
+        def append(*args, **fields):
+            if fields["entry_kind"] == "interpretation":
+                raise OSError("simulated full disk")
+            return entry.entry_append(*args, **fields)
+        with patch.object(pulse, "entry_append", side_effect=append):
+            with self.assertRaises(OSError):
+                self.pulse()
+        self.assertEqual(json.loads(memory.read_text())["notes"], "keep this question")
+        self.assertEqual(self.budget()["input_tokens"], 1000)
+        self.assertEqual(self.entries()[0]["content"], self.reply)
+
+    def test_dream_records_preserve_exact_inputs_and_references_across_days(self):
+        previous = self.write_log(self.yesterday)
+        self.pulse()
+        self.api.return_value = ("A grounded summary.", "200", 1000, 100)
+        self.dream()
+        daily_input, daily_output = self.entries()[-2:]
+        self.assertEqual(daily_input["content"], self.api.call_args.args[3])
+        self.assertIn(previous, daily_input["content"])
+        self.assertEqual(daily_output["entry_kind"], "summary")
+        self.assertEqual(daily_output["epistemic_tag"], "UNKNOWN")
+        self.assertEqual(daily_output["source_refs"], [daily_input["entry_id"]])
+        self.dream("weekly")
+        weekly_input, weekly_output = self.entries()[-2:]
+        self.assertIn(daily_output["entry_id"], weekly_input["content"])
+        self.assertEqual(weekly_output["source_refs"], [weekly_input["entry_id"]])
+        dreams_context = pulse.load_dreams(self.mind)
+        self.assertIn(daily_output["entry_id"], dreams_context)
+        self.assertIn(weekly_output["entry_id"], dreams_context)
 
 
 class ProviderResponseTests(unittest.TestCase):

@@ -16,9 +16,11 @@ import json
 import os
 import sys
 import subprocess
+import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 
+from entry import entry_append
 from runtime import atomic_write, load_budget, mind_lock, prepare_daily_log, record_usage
 
 # -- Resolve paths --
@@ -55,11 +57,31 @@ def load_text(path, default=""):
     return default
 
 
-def fetch_live_data(config):
-    """Run all data fetchers defined in config."""
+def persist_entry(mind_dir, **fields):
+    """Surface journal failures and leave existing memory available for review."""
+    try:
+        return entry_append(mind_dir.parent / "entries", **fields)
+    except (OSError, ValueError) as error:
+        try:
+            log_to(mind_dir / "error.log", f"ENTRY_ERROR: {error}")
+        except OSError:
+            print(f"ENTRY_ERROR: {error}", file=sys.stderr)
+        raise
+
+
+def record_footer(record):
+    """Runner-authored provenance, distinct from citations claimed by a model."""
+    return f"\n\n**Journal record:** `{record['entry_id']}`\n"
+
+
+def fetch_live_data(config, mind_name, pulse_id):
+    """Preserve each source's output or failure before presenting it to a model."""
     data_parts = []
+    source_ids = []
+    mind_dir = DATA_DIR / mind_name
     for fetcher in config.get("data_sources", []):
         script = SCRIPT_DIR / fetcher["script"]
+        output, error, returncode = "", "", None
         if script.exists():
             try:
                 cmd = ["python3", str(script)] if str(script).endswith(".py") else ["bash", str(script)]
@@ -67,11 +89,31 @@ def fetch_live_data(config):
                     cmd,
                     capture_output=True, text=True, timeout=30
                 )
-                if result.stdout.strip():
-                    data_parts.append(result.stdout.strip())
-            except Exception as e:
-                data_parts.append(f"Fetcher {fetcher['script']} failed: {e}")
-    return "\n\n".join(data_parts) if data_parts else "No live data sources configured."
+                output, returncode = result.stdout, result.returncode
+                if returncode != 0:
+                    error = result.stderr.strip() or f"Fetcher exited with status {returncode}"
+                elif not output.strip():
+                    error = "Fetcher returned no output"
+            except Exception as failure:
+                output = getattr(failure, "stdout", "") or ""
+                if isinstance(output, bytes):
+                    output = output.decode("utf-8", errors="replace")
+                error = f"{type(failure).__name__}: {failure}"
+        else:
+            error = f"Fetcher script not found: {fetcher['script']}"
+
+        tag = fetcher.get("epistemic_tag", "UNKNOWN")
+        if error or tag not in ("FETCHED", "DERIVED"):
+            tag = "UNKNOWN"
+        record = persist_entry(mind_dir, author=mind_name, entry_kind="observation",
+            content=output if output.strip() else error, epistemic_tag=tag,
+            data_source=fetcher.get("name", fetcher["script"]), source_refs=[fetcher["script"]],
+            pulse_id=pulse_id, payload={"returncode": returncode, "error": error or None},
+            timestamp=datetime.now(timezone.utc).isoformat())
+        source_ids.append(record["entry_id"])
+        status = f"\nSource failure: {error}" if error else ""
+        data_parts.append(f"### Source record: {record['entry_id']} [{tag}]{status}\n{record['content']}")
+    return ("\n\n".join(data_parts) if data_parts else "No live data sources configured."), source_ids
 
 
 def load_core_docs(config):
@@ -300,7 +342,8 @@ def run_pulse(config, mind_name, api_key, mind_dir, memory_file, daily_log,
     shared_state = load_text(shared_state_path, "No shared state file yet.")
 
     # -- Live data --
-    live_data = fetch_live_data(config)
+    pulse_id = f"{mind_name}-{now_iso}-{uuid.uuid4().hex[:8]}"
+    live_data, source_ids = fetch_live_data(config, mind_name, pulse_id)
 
     # -- Core docs --
     core_docs = load_core_docs(config)
@@ -351,6 +394,7 @@ def run_pulse(config, mind_name, api_key, mind_dir, memory_file, daily_log,
 2. If you have observations, write them with proper tags.
 3. If you have nothing meaningful, say "Pulse active. No signal."
 4. Think about what the next pulse (also you) needs to know.
+5. Source record IDs identify the data you received, not verified facts. Cite exact IDs when useful; preserve uncertainty and source failures.
 
 Respond with ONLY a JSON object (no markdown fences, no preamble, no text outside the JSON):
 {{"log_entry": "your markdown log entry (use ### HH:MM UTC format)", "memory": {{"pulse_count": N, "last_pulse": "ISO8601", "observations": ["list"], "threads": ["list"], "notes": "for next pulse", "buffer": ["optional list of messages for Nova"]}}}}"""
@@ -368,6 +412,14 @@ Respond with ONLY a JSON object (no markdown fences, no preamble, no text outsid
     cost = 0
     if http_code == "200" or input_tokens or output_tokens:
         cost = record_usage(budget_file, budget, config, input_tokens, output_tokens, "pulse")
+
+    response_record = persist_entry(mind_dir, author=mind_name, entry_kind="trace",
+        content=text if text and text.strip() else f"API returned HTTP {http_code} with no usable text",
+        source_refs=source_ids,
+        pulse_id=pulse_id, data_source="pulse_response",
+        payload={"provider": provider, "model": model, "http_code": http_code,
+                 "input_tokens": input_tokens, "output_tokens": output_tokens},
+        timestamp=datetime.now(timezone.utc).isoformat())
 
     if http_code != "200" or not text:
         append_to_log(daily_log,
@@ -423,7 +475,11 @@ Respond with ONLY a JSON object (no markdown fences, no preamble, no text outsid
         return
 
     # -- Success --
-    append_to_log(daily_log, log_entry)
+    record = persist_entry(mind_dir, author=mind_name, entry_kind="interpretation",
+        content=log_entry, source_refs=[response_record["entry_id"]], pulse_id=pulse_id,
+        payload={"provider": provider, "model": model}, timestamp=datetime.now(timezone.utc).isoformat())
+    append_to_log(daily_log, log_entry + record_footer(record))
+    memory_update["last_entry_id"] = record["entry_id"]
     atomic_write(memory_file, json.dumps(memory_update, indent=2, ensure_ascii=False))
 
     log_to(pulse_log,

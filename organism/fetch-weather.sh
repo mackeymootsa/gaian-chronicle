@@ -47,4 +47,5 @@ if [ -n "$WEATHER_DATA" ]; then
 else
     echo "## Weather Data: UNAVAILABLE"
     echo "SMHI API unreachable or returned no data."
+    exit 1
 fi

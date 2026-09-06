@@ -111,6 +111,10 @@ there is no data migration or automatic change to cron.
 
 ### Memory preservation and dreams
 
+Source outputs, model responses, and dream inputs/outputs are also retained in
+the [canonical entry log](ENTRIES.md). Journal IDs in logs, dreams, and memory
+let later reviews find the recorded artifacts behind a summary.
+
 The first pulse of a new UTC day saves the previous daily log to
 `archive/daily_log_YYYY-MM-DD.md` before opening the new day's log. The optional
 `archive-logs.sh` command uses the same archive rules and shared lock. A

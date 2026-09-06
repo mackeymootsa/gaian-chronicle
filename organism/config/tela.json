@@ -18,16 +18,19 @@
     {
       "name": "SMHI Stockholm Weather",
       "script": "fetch-weather.sh",
+      "epistemic_tag": "FETCHED",
       "description": "Current temperature, humidity, wind, pressure from SMHI open API"
     },
     {
       "name": "Stockholm Daylight",
       "script": "fetch-daylight.py",
+      "epistemic_tag": "DERIVED",
       "description": "Sunrise, sunset, daylight duration"
     },
     {
       "name": "Repository Activity",
       "script": "fetch-git-activity.sh",
+      "epistemic_tag": "FETCHED",
       "description": "Recent git commits to gaian-chronicle repo"
     }
   ]

@@ -2,8 +2,10 @@
 
 This is the first storage slice of the April 2026 cognitive architecture:
 versioned records in an append-only JSONL journal. It provides durable source
-artifacts for the Understory Index. Typed environmental measurements, question
-lifecycles, annotations, and an Understory-specific view remain future work.
+artifacts for the Understory Index. [Body sensing and shared inquiry](CONTINUITY.md)
+and [Palace annotations, recall and threads](INVESTIGATION.md) build on it.
+Typed external environmental measurements and an Understory-specific view remain
+future work.
 
 ## Where records live
 
@@ -57,12 +59,19 @@ belong on raw records; corrections should be new records or derived annotations.
 - The runner adds a journal ID to each successful log entry and dream file.
   `memory.json.last_entry_id` points to the latest successfully recorded pulse
   interpretation. Existing context loading carries these IDs into later calls.
+- Inquiry, investigation threads and numeric watchpoint lifecycle/evaluation
+  events retain their original records and append later changes. Recall requests
+  and results are traces. A cognition context trace records the exact bounded
+  investigation view supplied to a pulse and is referenced by its raw response.
+  Classification history lives separately in `annotations/`, with the target ID,
+  annotator, reason, superseded annotation and model response reference.
 
 The journal is populated by the runner, not by accepting model-supplied entry
 metadata. Model-written tags and citations remain part of the preserved text.
 This slice does not snapshot the full pulse prompt or construct a claim-level
 citation graph. Fresh source artifacts and complete pulse responses are kept;
-dream requests are preserved in full.
+dream requests are preserved in full. The investigation context receipt covers
+that section only, not the rest of the pulse prompt or system instructions.
 
 ## Read a record
 

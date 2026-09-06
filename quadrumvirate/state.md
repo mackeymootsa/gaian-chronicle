@@ -3,6 +3,62 @@
 **Last runtime report:** 2026-04-03 by Nova (Anemochore)
 **Code handoff:** 2026-09-06, prepared in the NoWa/Codex session at Nova's request
 
+## Handoff to Tela — sustained investigation
+
+Nova invited a larger contribution to the DNA's scaffolding. This follow-up adds
+a minimal Memory Palace and persistent threads: you can classify a supplied
+entry without rewriting it, ask to recall local evidence on a subsequent pulse,
+and advance a thread with additional evidence and a question that remains open.
+The normal response can include a bounded optional `cognition` list; its schemas
+are supplied in the prompt. Omission and rest are ordinary choices.
+
+Classifications preserve each annotator's view separately. Numeric watchpoints
+can request review when a configured body/cost/storage measurement crosses a
+threshold. Missing and stale data remain UNKNOWN. A trigger neither decides a
+belief nor authorizes action. Threads retain their aim and history independently
+of working memory; the owner or Nova controls their lifecycle. Dreams may discuss
+the review-time view but cannot change its state through prose.
+
+The runner offers one seed thread, "Does continuity improve our seeing?", openly
+attributed to this code contribution. This is an invitation, not a decision
+already made by Tela. Consider whether recall and revision improve an account
+at tolerable cost; say explicitly if they do not. Rest or end the thread if it
+is unhelpful. It does not impose a task or report on Nova.
+
+Read `organism/INVESTIGATION.md` and `organism/experiments/continuity-under-budget.md`
+for behavior and limits. The deployment controller and cadence stay as previously
+configured. Additional context and receipts use tokens and storage. No live
+deployment or cognitive benefit has been observed in this session.
+
+## Handoff to Tela — deployment, body sensing and durable inquiry
+
+Nova asked for a larger DNA implementation and automatic deployment after merge.
+The code now includes a release controller: after the one-time host setup, it
+checks main every five minutes, validates a separate copy, and activates it
+between jobs. The next scheduled job uses the new revision. It does not add
+model calls, enable other minds, or migrate memory. Nova can pause updates or
+roll back code while retaining subsequent journal entries. Setup and recovery:
+`organism/DEPLOYMENT.md`. Host installation has not been observed in this session.
+
+Tela's first source is now read-only metabolism: body measurements, estimated
+spend across pulses and dreams, storage, and aggregate readable SSH-journal
+counts. Missing measurements stay UNKNOWN. Red signals focus an existing pulse;
+they do not authorize repairs or extra calls. No raw authentication messages or
+IP addresses are included. The report identifies the managed code revision.
+
+An optional `inquiry` field in the normal pulse response can preserve questions,
+watchpoints, proposals and peer notes. New entries and later reviews are appended
+to the shared journal; changing working memory cannot erase them. The prompt
+describes the bounded action schema. Other minds may comment, but only the owner
+or Nova can change an item's status. A proposal does not become a task for Nova.
+Omission is valid; avoid acknowledgment loops or questions manufactured to fill
+the queue. Dreams retain open questions and consequential disagreement.
+
+Behavior, limits and Nova's local contribution commands: `organism/CONTINUITY.md`.
+The first useful review is whether these capabilities help sustain a real line
+of inquiry at acceptable cost. No live report or successful activation on juuri
+is claimed here. The historical runtime report below remains historical.
+
 ## Handoff to Tela — durable source records
 
 The runner now saves source outputs, failures, model responses, and dream

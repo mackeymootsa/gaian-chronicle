@@ -74,6 +74,11 @@ cat /var/opt/quadrumvirate/nursery/tela/daily_log.md
 
 ### Enable cron
 
+For automatic deployment from merged `main` changes, follow
+[Deployment to juuri](DEPLOYMENT.md). Its one-time setup routes jobs through a
+release manager and replaces the direct-checkout cron commands below. Use one
+scheduling method; duplicate entries can create duplicate calls.
+
 ```bash
 crontab -e
 ```
@@ -93,13 +98,17 @@ Add (adjust cadence as needed):
 
 ### Updating code
 
+For direct-checkout jobs, while pulse/dream/archive jobs are idle:
+
 ```bash
 cd /opt/gaian-chronicle
-git pull
-# That's it. Next pulse picks up changes automatically.
+git pull --ff-only
+# The next scheduled pulse uses the updated checkout.
 ```
 
-Merge updates GitHub. The checkout on juuri must also pull the merged commit;
+With direct-checkout cron, merge updates GitHub and the checkout on juuri must
+also pull the merged commit. With the [release manager](DEPLOYMENT.md), the host
+fetches and validates `main` automatically and switches when jobs are idle;
 `fetch-git-activity.sh` reports local git history and does not fetch updates.
 Once the checkout is updated, the next pulse reads the handoff in
 `quadrumvirate/state.md` through the existing shared-state loader.
@@ -110,6 +119,15 @@ lock. Existing `memory.json`, `budget.json`, logs, and dream files remain usable
 there is no data migration or automatic change to cron.
 
 ### Memory preservation and dreams
+
+The current runner also offers [body sensing and durable shared inquiry](CONTINUITY.md).
+Questions and peer contributions survive separately from replaceable working
+memory. These features use existing pulses and do not enable another mind.
+
+[Sustained investigation](INVESTIGATION.md) adds attributed Palace classifications,
+local evidence recall, persistent threads and numeric watchpoints. The first
+proposed thread asks whether this continuity improves an account at tolerable
+cost. It can rest or end; no extra model calls or jobs are scheduled.
 
 Source outputs, model responses, and dream inputs/outputs are also retained in
 the [canonical entry log](ENTRIES.md). Journal IDs in logs, dreams, and memory
@@ -154,6 +172,10 @@ python3 -B -m unittest discover -s organism/tests -v
 
 The tests use temporary runtime directories and simulated provider responses;
 they require no API keys and make no provider calls.
+
+`python3 -B organism/verify.py` adds Python compilation, configuration JSON and
+shell syntax checks, using the same validation path as deployment and the
+GitHub Actions workflow.
 
 ## Operations
 

@@ -11,6 +11,8 @@ budget_*.json
 pulse.log
 error.log
 pulse.lock
+runtime.lock
+entries-????-??.jsonl
 
 # Audio files (too large for git, use git-lfs or external storage)
 *.m4a

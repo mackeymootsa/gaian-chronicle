@@ -16,7 +16,7 @@ import sys
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
-from pulse import API_CALLERS
+from pulse import API_CALLERS, persist_entry, record_footer
 from runtime import atomic_write, load_budget, log_date, mind_lock, record_usage
 
 SCRIPT_DIR = Path(__file__).parent.resolve()
@@ -29,7 +29,7 @@ def load_config(mind_name):
     return json.loads(config_path.read_text())
 
 
-def request_dream(config, mind_dir, system_prompt, user_message, max_tokens):
+def request_dream(config, mind_dir, system_prompt, user_message, max_tokens, *, source_files, period):
     """Use the configured provider and shared budget while holding mind_lock."""
     api_key = os.environ.get(config["api_key_env"], "")
     if not api_key:
@@ -48,16 +48,28 @@ def request_dream(config, mind_dir, system_prompt, user_message, max_tokens):
         print(f"BUDGET_SLEEP: Daily allowance ${limit:.2f} reached")
         return None
 
+    source_record = persist_entry(mind_dir, author=mind_dir.name, entry_kind="trace",
+        content=user_message, source_refs=source_files, data_source="dream_input",
+        payload={"system_prompt": system_prompt, "period": period},
+        timestamp=datetime.now(timezone.utc).isoformat())
     text, http_code, in_tok, out_tok = caller(
         api_key, config["model"], system_prompt, user_message, max_tokens, timeout=60
     )
     if http_code == "200" or in_tok or out_tok:
         cost = record_usage(budget_file, budget, config, in_tok, out_tok, "dream")
         print(f"Dream usage: cost=${cost:.6f} total=${budget['spent_usd']:.6f}")
-    if http_code != "200" or not text or not text.strip():
+    usable = http_code == "200" and bool(text and text.strip())
+    record = persist_entry(mind_dir, author=mind_dir.name,
+        entry_kind="summary" if usable else "trace",
+        content=text if text and text.strip() else f"Dream API returned no usable text (HTTP {http_code})",
+        source_refs=[source_record["entry_id"]], data_source="dream_response",
+        payload={"provider": config["provider"], "model": config["model"], "period": period,
+                 "http_code": http_code, "input_tokens": in_tok, "output_tokens": out_tok},
+        timestamp=datetime.now(timezone.utc).isoformat())
+    if not usable:
         print(f"Dream API returned no usable text (HTTP {http_code})")
         return None
-    return text
+    return record
 
 
 def daily_dream(mind_name, config):
@@ -114,13 +126,14 @@ Produce a daily dream summary with these sections (skip any section with nothing
 
 Maximum 300 words. Write in first person as {config['display_name']}."""
 
-    text = request_dream(
-        config, mind_dir, system_prompt, user_message, 1024
+    record = request_dream(
+        config, mind_dir, system_prompt, user_message, 1024,
+        source_files=[str(log_path.relative_to(mind_dir))], period=yesterday
     )
 
-    if text:
+    if record:
         header = f"# Daily Dream — {yesterday}\n\n"
-        atomic_write(dream_file, header + text.strip() + "\n")
+        atomic_write(dream_file, header + record["content"].strip() + record_footer(record))
         print(f"Daily dream written: {dream_file}")
 
 
@@ -140,11 +153,13 @@ def weekly_dream(mind_name, config):
 
     # Gather last 7 daily dreams
     daily_dreams = []
+    source_files = []
     for i in range(7, 0, -1):
         day = (today - timedelta(days=i)).strftime("%Y-%m-%d")
         dream_path = dreams_dir / f"daily_{day}.md"
         if dream_path.exists():
             daily_dreams.append(dream_path.read_text())
+            source_files.append(str(dream_path.relative_to(mind_dir)))
 
     if not daily_dreams:
         print("No daily dreams found for the past week")
@@ -171,13 +186,14 @@ Produce a weekly consolidation with these sections (skip empty ones):
 
 Maximum 200 words. Write in first person as {config['display_name']}."""
 
-    text = request_dream(
-        config, mind_dir, system_prompt, user_message, 768
+    record = request_dream(
+        config, mind_dir, system_prompt, user_message, 768,
+        source_files=source_files, period=week_label
     )
 
-    if text:
+    if record:
         header = f"# Weekly Dream — {week_label}\n\n"
-        atomic_write(weekly_file, header + text.strip() + "\n")
+        atomic_write(weekly_file, header + record["content"].strip() + record_footer(record))
         print(f"Weekly dream written: {weekly_file}")
 
 

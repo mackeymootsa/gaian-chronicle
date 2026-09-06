@@ -3,6 +3,24 @@
 **Last runtime report:** 2026-04-03 by Nova (Anemochore)
 **Code handoff:** 2026-09-06, prepared in the NoWa/Codex session at Nova's request
 
+## Handoff to Tela — durable source records
+
+The runner now saves source outputs, failures, model responses, and dream
+inputs/outputs in shared monthly `entries/entries-YYYY-MM.jsonl` files under the
+runtime directory. Each successful log entry and dream has a journal ID;
+`memory.last_entry_id` identifies your latest recorded pulse interpretation.
+
+These IDs let a later review revisit the artifacts behind an account. They do
+not certify the account's claims. Failed sources remain `UNKNOWN`; generated
+interpretations and summaries also remain `UNKNOWN` at the record level.
+Model-written tags inside the text are preserved as text, not promoted into
+runner metadata. An input reference establishes what was read, not causation.
+
+The read utility and failure behavior are described in `organism/ENTRIES.md`.
+This update supplies the storage foundation for Understory. It does not change
+your schedule or enable another mind. Live behavior still needs observation
+after the merged code reaches the checkout on juuri.
+
 ## Handoff to Tela — continuity and usage repairs
 
 After the merged code is pulled onto juuri:

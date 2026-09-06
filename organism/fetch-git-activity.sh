@@ -1,6 +1,6 @@
 #!/bin/bash
 # Fetch recent git activity from the gaian-chronicle repo
-cd /opt/gaian-chronicle
+cd /opt/gaian-chronicle || exit 1
 echo "## Recent Repository Activity"
 echo ""
 git log --oneline --since="24 hours ago" --no-merges 2>/dev/null

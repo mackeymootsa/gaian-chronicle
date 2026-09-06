@@ -15,10 +15,11 @@ budget limits, and data sources.
 import json
 import os
 import sys
-import time
 import subprocess
 from datetime import datetime, timezone
 from pathlib import Path
+
+from runtime import atomic_write, load_budget, mind_lock, prepare_daily_log, record_usage
 
 # -- Resolve paths --
 SCRIPT_DIR = Path(__file__).parent.resolve()
@@ -98,7 +99,7 @@ def load_dreams(mind_dir):
     return "\n\n---\n\n".join(parts) if parts else ""
 
 
-def call_anthropic(api_key, model, system_prompt, user_message, max_tokens):
+def call_anthropic(api_key, model, system_prompt, user_message, max_tokens, timeout=30):
     request_body = {
         "model": model,
         "max_tokens": max_tokens,
@@ -113,10 +114,10 @@ def call_anthropic(api_key, model, system_prompt, user_message, max_tokens):
             "-H", f"x-api-key: {api_key}",
             "-H", "anthropic-version: 2023-06-01",
             "-d", json.dumps(request_body),
-            "--max-time", "30",
+            "--max-time", str(timeout),
             "-w", "\n%{http_code}"
         ],
-        capture_output=True, text=True, timeout=45
+        capture_output=True, text=True, timeout=timeout + 15
     )
     lines = result.stdout.strip().rsplit("\n", 1)
     if len(lines) != 2:
@@ -128,13 +129,14 @@ def call_anthropic(api_key, model, system_prompt, user_message, max_tokens):
         response = json.loads(body_str)
         input_tokens = response.get("usage", {}).get("input_tokens", 0)
         output_tokens = response.get("usage", {}).get("output_tokens", 0)
-        text = response.get("content", [{}])[0].get("text", "")
+        text = "".join(block.get("text", "") for block in response.get("content", [])
+                       if block.get("type") == "text")
         return text, "200", input_tokens, output_tokens
     except json.JSONDecodeError:
         return None, "PARSE_ERROR", 0, 0
 
 
-def call_openai(api_key, model, system_prompt, user_message, max_tokens):
+def call_openai(api_key, model, system_prompt, user_message, max_tokens, timeout=30):
     request_body = {
         "model": model,
         "max_tokens": max_tokens,
@@ -150,10 +152,10 @@ def call_openai(api_key, model, system_prompt, user_message, max_tokens):
             "-H", "content-type: application/json",
             "-H", f"Authorization: Bearer {api_key}",
             "-d", json.dumps(request_body),
-            "--max-time", "30",
+            "--max-time", str(timeout),
             "-w", "\n%{http_code}"
         ],
-        capture_output=True, text=True, timeout=45
+        capture_output=True, text=True, timeout=timeout + 15
     )
     lines = result.stdout.strip().rsplit("\n", 1)
     if len(lines) != 2:
@@ -166,13 +168,14 @@ def call_openai(api_key, model, system_prompt, user_message, max_tokens):
         usage = response.get("usage", {})
         input_tokens = usage.get("prompt_tokens", 0)
         output_tokens = usage.get("completion_tokens", 0)
-        text = response.get("choices", [{}])[0].get("message", {}).get("content", "")
+        choices = response.get("choices") or [{}]
+        text = choices[0].get("message", {}).get("content") or ""
         return text, "200", input_tokens, output_tokens
     except json.JSONDecodeError:
         return None, "PARSE_ERROR", 0, 0
 
 
-def call_google(api_key, model, system_prompt, user_message, max_tokens):
+def call_google(api_key, model, system_prompt, user_message, max_tokens, timeout=30):
     request_body = {
         "contents": [{"parts": [{"text": user_message}]}],
         "systemInstruction": {"parts": [{"text": system_prompt}]},
@@ -185,10 +188,10 @@ def call_google(api_key, model, system_prompt, user_message, max_tokens):
             f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={api_key}",
             "-H", "content-type: application/json",
             "-d", json.dumps(request_body),
-            "--max-time", "30",
+            "--max-time", str(timeout),
             "-w", "\n%{http_code}"
         ],
-        capture_output=True, text=True, timeout=45
+        capture_output=True, text=True, timeout=timeout + 15
     )
     lines = result.stdout.strip().rsplit("\n", 1)
     if len(lines) != 2:
@@ -198,7 +201,9 @@ def call_google(api_key, model, system_prompt, user_message, max_tokens):
         return None, http_code.strip(), 0, 0
     try:
         response = json.loads(body_str)
-        text = response.get("candidates", [{}])[0].get("content", {}).get("parts", [{}])[0].get("text", "")
+        candidates = response.get("candidates") or [{}]
+        parts = candidates[0].get("content", {}).get("parts", [])
+        text = "".join(part.get("text", "") for part in parts)
         usage = response.get("usageMetadata", {})
         input_tokens = usage.get("promptTokenCount", 0)
         output_tokens = usage.get("candidatesTokenCount", 0)
@@ -235,7 +240,6 @@ def main():
     daily_log = mind_dir / "daily_log.md"
     budget_file = mind_dir / "budget.json"
     pulse_brief = mind_dir / "pulse_brief.md"
-    lock_file = mind_dir / "pulse.lock"
     error_log = mind_dir / "error.log"
     pulse_log = mind_dir / "pulse.log"
 
@@ -246,20 +250,12 @@ def main():
         log_to(error_log, f"ERROR: {api_key_var} not set")
         sys.exit(1)
 
-    # -- Lock --
-    if lock_file.exists():
-        lock_age = time.time() - lock_file.stat().st_mtime
-        if lock_age < 300:
-            log_to(error_log, f"SKIP: Lock held ({lock_age:.0f}s)")
-            sys.exit(0)
-        lock_file.unlink()
-
-    lock_file.touch()
     try:
-        run_pulse(config, mind_name, api_key, mind_dir, memory_file, daily_log,
-                  budget_file, pulse_brief, error_log, pulse_log, today, now_utc, now_iso)
-    finally:
-        lock_file.unlink(missing_ok=True)
+        with mind_lock(mind_dir):
+            run_pulse(config, mind_name, api_key, mind_dir, memory_file, daily_log,
+                      budget_file, pulse_brief, error_log, pulse_log, today, now_utc, now_iso)
+    except BlockingIOError:
+        log_to(error_log, "SKIP: Another pulse, dream, or archive job is active")
 
 
 def run_pulse(config, mind_name, api_key, mind_dir, memory_file, daily_log,
@@ -270,29 +266,16 @@ def run_pulse(config, mind_name, api_key, mind_dir, memory_file, daily_log,
     model = config["model"]
     max_tokens = config.get("max_tokens", 2048)
     daily_budget = config.get("daily_budget_usd", 2.00)
-    input_cost = config.get("input_cost_per_mtok", 1.0)
-    output_cost = config.get("output_cost_per_mtok", 5.0)
     display_name = config.get("display_name", mind_name.capitalize())
     cadence = config.get("cadence", "hourly")
 
     # -- Init daily log --
-    if not daily_log.exists() or today not in daily_log.read_text().split("\n")[0]:
-        daily_log.write_text(
-            f"# {display_name} Daily Log — {today} (UTC)\n"
-            f"Pulse: {display_name} ({model}) • Cadence: {cadence} • Mode: READ-ONLY • Budget: ${daily_budget:.2f}/day\n\n---\n\n"
-        )
+    prepare_daily_log(daily_log, today,
+        f"# {display_name} Daily Log — {today} (UTC)\n"
+        f"Pulse: {display_name} ({model}) • Cadence: {cadence} • Mode: READ-ONLY • Budget: ${daily_budget:.2f}/day\n\n---\n\n")
 
     # -- Budget --
-    if budget_file.exists():
-        budget = json.loads(budget_file.read_text())
-        if budget.get("date") != today:
-            archive = mind_dir / f"budget_{budget['date']}.json"
-            archive.write_text(json.dumps(budget))
-            budget = {"date": today, "spent_usd": 0, "pulses_run": 0,
-                      "input_tokens": 0, "output_tokens": 0}
-    else:
-        budget = {"date": today, "spent_usd": 0, "pulses_run": 0,
-                  "input_tokens": 0, "output_tokens": 0}
+    budget = load_budget(budget_file, today)
 
     if budget["spent_usd"] >= daily_budget:
         append_to_log(daily_log,
@@ -382,6 +365,10 @@ Respond with ONLY a JSON object (no markdown fences, no preamble, no text outsid
         api_key, model, system_prompt, user_message, max_tokens
     )
 
+    cost = 0
+    if http_code == "200" or input_tokens or output_tokens:
+        cost = record_usage(budget_file, budget, config, input_tokens, output_tokens, "pulse")
+
     if http_code != "200" or not text:
         append_to_log(daily_log,
             f"### {now_utc} UTC\n**Status:** DEGRADED\n"
@@ -426,26 +413,18 @@ Respond with ONLY a JSON object (no markdown fences, no preamble, no text outsid
             log_to(error_log, f"JSON_ERROR: {e}\nRaw: {text[:500]}")
             return
 
-    log_entry = response.get("log_entry", "")
-    memory_update = response.get("memory")
+    log_entry = response.get("log_entry") if isinstance(response, dict) else None
+    memory_update = response.get("memory") if isinstance(response, dict) else None
 
-    if not log_entry or memory_update is None:
+    if not isinstance(log_entry, str) or not log_entry.strip() or not isinstance(memory_update, dict):
         append_to_log(daily_log,
             f"### {now_utc} UTC\n**Status:** DEGRADED\n"
-            f"**Notes:** Missing log_entry or memory in response.")
+            f"**Notes:** Response requires a non-empty log_entry string and a memory object.")
         return
 
     # -- Success --
     append_to_log(daily_log, log_entry)
-    memory_file.write_text(json.dumps(memory_update, indent=2, ensure_ascii=False))
-
-    # -- Budget --
-    cost = (input_tokens * input_cost / 1_000_000) + (output_tokens * output_cost / 1_000_000)
-    budget["spent_usd"] = round(budget["spent_usd"] + cost, 6)
-    budget["pulses_run"] = pulse_num
-    budget["input_tokens"] += input_tokens
-    budget["output_tokens"] += output_tokens
-    budget_file.write_text(json.dumps(budget))
+    atomic_write(memory_file, json.dumps(memory_update, indent=2, ensure_ascii=False))
 
     log_to(pulse_log,
         f"PULSE_OK: #{pulse_num} cost=${cost:.6f} total=${budget['spent_usd']:.6f} "

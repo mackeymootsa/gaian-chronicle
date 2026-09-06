@@ -36,6 +36,8 @@ class DeploymentTests(unittest.TestCase):
         (organism / "tests").mkdir()
         for file in ("pulse.py", "dream.py", "runtime.py", "entry.py"):
             (organism / file).write_text("# test fixture\n")
+        for file in ("archive-logs.sh", "check-buffer.sh"):
+            (organism / file).write_text("#!/bin/bash\nexit 0\n")
         (organism / "pulse.py").write_text(
             "import os\nfrom pathlib import Path\n"
             "Path(os.environ['NURSERY_DIR'], 'ran').write_text(os.environ['GAIAN_REVISION'])\n")
@@ -76,6 +78,44 @@ class DeploymentTests(unittest.TestCase):
         with patch.object(self.deployment, "validate") as validate:
             self.deployment.update()
         validate.assert_not_called()
+
+    def test_unchanged_main_reports_and_preserves_edits_to_the_active_release(self):
+        changed = self.deployment.release(self.first) / "organism" / "pulse.py"
+        changed.write_text(changed.read_text() + "\n# accidental local edit\n")
+        before = changed.read_bytes()
+        with self.assertRaisesRegex(ValueError, "was edited"):
+            self.deployment.update()
+        self.assertEqual(self.deployment.state()["current"], self.first)
+        self.assertIn("UPDATE_FAILED", self.deployment.state()["message"])
+        self.assertEqual(changed.read_bytes(), before)
+
+    def test_every_job_rejects_an_edited_release_even_when_updates_are_paused(self):
+        self.deployment.pause(True)
+        changed = self.deployment.release(self.first) / "organism" / "pulse.py"
+        changed.write_text(changed.read_text() + "\n# accidental local edit\n")
+        before = (self.runtime / "memory.json").read_bytes()
+        with patch.object(deploy.subprocess, "call") as launch:
+            for job, arguments in (("pulse", ["tela"]), ("dream", ["tela", "daily"]),
+                                   ("archive", []), ("buffer", [])):
+                with self.subTest(job=job):
+                    with self.assertRaisesRegex(ValueError, "was edited"):
+                        self.deployment.run(job, arguments)
+            self.assertEqual(launch.call_count, 0)
+        self.assertFalse((self.runtime / "ran").exists())
+        self.assertEqual((self.runtime / "memory.json").read_bytes(), before)
+
+    def test_missing_shell_jobs_cannot_activate_a_release(self):
+        for filename in ("archive-logs.sh", "check-buffer.sh"):
+            with self.subTest(filename=filename):
+                path = self.repository / "organism" / filename
+                content = path.read_bytes()
+                path.unlink()
+                candidate = self.commit(f"Remove {filename}")
+                with self.assertRaisesRegex(ValueError, "Missing regular release file"):
+                    self.deployment.update()
+                self.assertEqual(self.deployment.state()["current"], self.first)
+                self.assertEqual(self.deployment.state()["failed_revision"], candidate)
+                path.write_bytes(content)
 
     def test_only_main_activates_and_next_job_uses_new_revision(self):
         self.git("switch", "-c", "proposal")

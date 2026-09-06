@@ -24,6 +24,8 @@ DEFAULT_RUNTIME = Path("/var/opt/quadrumvirate/nursery")
 SHA = re.compile(r"[0-9a-f]{40}")
 MIND = re.compile(r"[a-z][a-z0-9_-]{0,31}")
 CONTROLLER_VERSION = 1
+JOB_SCRIPTS = {"pulse": "pulse.py", "dream": "dream.py",
+               "archive": "archive-logs.sh", "buffer": "check-buffer.sh"}
 
 
 def now():
@@ -138,8 +140,8 @@ class Deployment:
             raise ValueError("Managed release was edited; preserve it for review, do not reset it")
 
     def validate(self, release, env):
-        required = ("organism/pulse.py", "organism/dream.py", "organism/entry.py",
-                    "organism/runtime.py", "organism/tests/test_runtime.py")
+        required = [f"organism/{script}" for script in JOB_SCRIPTS.values()]
+        required += ["organism/entry.py", "organism/runtime.py", "organism/tests/test_runtime.py"]
         for name in required:
             path = release / name
             if not path.is_file() or path.is_symlink():
@@ -171,6 +173,7 @@ class Deployment:
                              "refs/heads/main:refs/remotes/origin/main", env=env)
                     candidate = self.git("rev-parse", "refs/remotes/origin/main^{commit}", env=env)
                     if candidate == state["current"]:
+                        self.check_tree(self.release(candidate), candidate, env)
                         print(f"CURRENT: {candidate}")
                         return
                     if candidate == state.get("failed_revision") and not retry:
@@ -235,9 +238,7 @@ class Deployment:
                     print(f"PRUNED code release: {path.name}")
 
     def run(self, job, arguments):
-        commands = {"pulse": ("pulse.py",), "dream": ("dream.py",),
-                    "archive": ("archive-logs.sh",), "buffer": ("check-buffer.sh",)}
-        if job not in commands:
+        if job not in JOB_SCRIPTS:
             raise ValueError("Unknown job")
         if job == "pulse" and (len(arguments) != 1 or not MIND.fullmatch(arguments[0])):
             raise ValueError("pulse requires one mind name")
@@ -249,7 +250,11 @@ class Deployment:
         with lock(self.root / "activation.lock", shared=True) as descriptor:
             state = self.state()
             release = self.release(state["current"])
-            script = release / "organism" / commands[job][0]
+            # Check locally even when updates are paused or GitHub is unreachable.
+            # Keep the activation lock through this check and the child process.
+            with tempfile.TemporaryDirectory(prefix="gaian-run-check-") as temporary:
+                self.check_tree(release, state["current"], clean_env(temporary))
+            script = release / "organism" / JOB_SCRIPTS[job]
             config = self.config()
             env = {**os.environ, "NURSERY_DIR": config["runtime_dir"],
                    "GAIAN_DEPLOY_DIR": str(self.root), "GAIAN_REVISION": state["current"],
@@ -293,7 +298,7 @@ def main():
     for name in ("pause", "resume", "rollback", "status", "prune"):
         sub.add_parser(name)
     run = sub.add_parser("run")
-    run.add_argument("job", choices=("pulse", "dream", "archive", "buffer"))
+    run.add_argument("job", choices=JOB_SCRIPTS)
     run.add_argument("arguments", nargs="*")
     cron = sub.add_parser("cron")
     cron.add_argument("--mind", action="append", dest="minds")

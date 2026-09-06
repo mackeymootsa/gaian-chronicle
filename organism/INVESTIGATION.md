@@ -186,10 +186,11 @@ Back up entries and annotations together. Restore missing raw history when an
 annotation reports an absent target. Do not remove a lock file to unlock a live
 process; the OS releases locks when their processes exit.
 
-This extends the deployment/body/inquiry contribution in PR #42. The existing
-[deployment setup](DEPLOYMENT.md) is sufficient: this release
-does not alter the pinned host controller or cron template. Once activated, the
-next scheduled pulse uses it. The configs enable cognition for Tela, NoWa and
+This extends the deployment/body/inquiry contribution in PR #42. Investigation
+uses the existing [deployment setup](DEPLOYMENT.md) and requires no additional
+controller features or cron entries. The deployment guide also describes delivery
+of the PR's controller review fixes. Once activated, the next scheduled pulse
+uses it. The configs enable cognition for Tela, NoWa and
 Tecton, but no additional mind is scheduled and no key is installed.
 
 No migration or historical backfill runs. Rolling code back to PR #42 retains

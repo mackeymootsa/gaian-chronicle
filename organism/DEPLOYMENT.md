@@ -5,6 +5,8 @@ It prepares a separate release, checks Python/JSON/shell syntax, runs the offlin
 tests, and atomically changes the active revision when scheduled jobs are idle.
 The next scheduled pulse or dream uses that revision. Deployment does not wake
 a mind, install packages, modify API keys, or change the model-call cadence.
+Validation requires every supported job script, including `archive-logs.sh` and
+`check-buffer.sh`, to exist as a regular file before a release can activate.
 
 GitHub Actions runs the same checks for PRs and pushes to `main`. Juuri repeats
 validation locally; activation does not depend on querying the Actions API or
@@ -98,6 +100,13 @@ process inherits that lock descriptor so killing the launcher cannot permit an
 update while the actual job continues. Existing per-mind locks still serialize
 pulse, dream and archive writes within a release.
 
+Before launching any job, the controller checks that the active checkout still
+matches its recorded revision and has no local changes reported by Git. A failed
+check prevents the child from starting and preserves the checkout for review.
+This local check also applies while updates are paused or GitHub is unavailable.
+An updater about to report `CURRENT` checks the active tree too. Neither path
+reruns the full test suite for an unchanged release or repairs edits silently.
+
 Old code releases are kept for recovery. Weekly `prune` retains the current,
 previous and last rejected revision plus the three newest code copies. It only
 removes clean registered worktrees and never uses forced deletion. Edited or
@@ -149,6 +158,11 @@ A future change to `organism/deploy.py` requires a separate reviewed controller
 upgrade on the host: stop the updater cron, allow active updates to finish,
 retain a copy of `manager.py`, validate the new controller, then replace it
 atomically. Do not overwrite the controller as an incidental application update.
+
+The review fixes in PR #42 add active-tree checks and require all dispatched job
+scripts. A fresh installation from the final merged code includes them. If an
+earlier PR snapshot was already installed, use the controller upgrade procedure
+above; fetching new application code alone does not replace that installed copy.
 
 Validation runs trusted merged code under the runtime Unix account. Clearing its
 environment prevents accidental key inheritance; it is not an operating-system

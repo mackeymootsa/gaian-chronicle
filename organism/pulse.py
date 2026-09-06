@@ -22,6 +22,7 @@ from pathlib import Path
 
 from entry import entry_append
 import inquiry
+import cognition
 from runtime import atomic_write, load_budget, mind_lock, prepare_daily_log, record_usage
 
 # -- Resolve paths --
@@ -380,6 +381,18 @@ def run_pulse(config, mind_name, api_key, mind_dir, memory_file, daily_log,
     if config.get("inquiry_enabled", False):
         inquiry_context, inquiry_refs = inquiry.context(DATA_DIR, mind_name, today)
 
+    cognition_context, cognition_refs, context_record_id = "", set(), None
+    cognition_policy = None
+    if config.get("cognition_enabled", False):
+        try:
+            cognition_policy = cognition.load_policy()
+            cognition_context, cognition_refs, context_record_id = cognition.prepare(
+                DATA_DIR, mind_name, timestamp=datetime.now(timezone.utc).isoformat(),
+                pulse_id=pulse_id, policy=cognition_policy)
+        except (OSError, ValueError) as failure:
+            log_to(error_log, f"COGNITION_CONTEXT_ERROR: {failure}")
+            raise
+
     # -- Core docs --
     core_docs = load_core_docs(config)
 
@@ -423,6 +436,9 @@ Different views can coexist. Agreement needs no invented objection. A watchpoint
 The runner permits nine active items per mind, twelve events per UTC day, and one contribution per item per day. Proposals do not become tasks for Nova or permission to act.
 """ if config.get("inquiry_enabled", False) else ""
 
+    cognition_section = ("\n## Investigation context (attributed history and bounded evidence excerpts)\n"
+                         + cognition_context + "\n\n" + cognition.instructions(cognition_policy)) if cognition_policy else ""
+
     user_message = f"""You are waking up for pulse #{pulse_num} on {today} at {now_utc} UTC.
 
 ## Your Memory (from previous pulse)
@@ -434,7 +450,7 @@ The runner permits nine active items per mind, twelve events per UTC day, and on
 {brief}
 
 ## Shared Quadrumvirate State
-{shared_state}{invitation_section}{core_docs_section}{dreams_section}{inquiry_section}
+{shared_state}{invitation_section}{core_docs_section}{dreams_section}{inquiry_section}{cognition_section}
 
 ## Live Data
 {live_data}
@@ -465,7 +481,7 @@ Respond with ONLY a JSON object (no markdown fences, no preamble, no text outsid
 
     response_record = persist_entry(mind_dir, author=mind_name, entry_kind="trace",
         content=text if text and text.strip() else f"API returned HTTP {http_code} with no usable text",
-        source_refs=source_ids,
+        source_refs=source_ids + ([context_record_id] if context_record_id else []),
         pulse_id=pulse_id, data_source="pulse_response",
         payload={"provider": provider, "model": model, "http_code": http_code,
                  "input_tokens": input_tokens, "output_tokens": output_tokens},
@@ -531,7 +547,7 @@ Respond with ONLY a JSON object (no markdown fences, no preamble, no text outsid
     if config.get("inquiry_enabled", False):
         try:
             inquiry.submit(DATA_DIR, mind_name, response.get("inquiry", []),
-                allowed_refs=set(source_ids) | inquiry_refs, response_id=response_record["entry_id"],
+                allowed_refs=set(source_ids) | inquiry_refs | cognition_refs, response_id=response_record["entry_id"],
                 pulse_id=pulse_id, timestamp=datetime.now(timezone.utc).isoformat())
         except (ValueError, TypeError) as failure:
             # Invalid optional actions never discard an otherwise usable pulse.
@@ -540,6 +556,18 @@ Respond with ONLY a JSON object (no markdown fences, no preamble, no text outsid
             persist_entry(mind_dir, author=mind_name, entry_kind="trace",
                 content=f"Runner rejected inquiry actions: {failure}",
                 source_refs=[response_record["entry_id"]], data_source="inquiry_rejection",
+                pulse_id=pulse_id, timestamp=datetime.now(timezone.utc).isoformat())
+    if cognition_policy:
+        try:
+            cognition.submit(DATA_DIR, mind_name, response.get("cognition", []),
+                allowed_refs=set(source_ids) | inquiry_refs | cognition_refs,
+                response_id=response_record["entry_id"], pulse_id=pulse_id,
+                timestamp=datetime.now(timezone.utc).isoformat(), policy=cognition_policy)
+        except (ValueError, TypeError) as failure:
+            log_to(error_log, f"COGNITION_REJECTED: {failure}")
+            persist_entry(mind_dir, author=mind_name, entry_kind="trace",
+                content=f"Runner rejected cognition actions: {failure}",
+                source_refs=[response_record["entry_id"]], data_source="cognition_rejection",
                 pulse_id=pulse_id, timestamp=datetime.now(timezone.utc).isoformat())
     append_to_log(daily_log, log_entry + record_footer(record))
     memory_update["last_entry_id"] = record["entry_id"]

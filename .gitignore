@@ -13,6 +13,8 @@ error.log
 pulse.lock
 runtime.lock
 inquiry.lock
+cognition.lock
+annotations-????-??.jsonl
 entries-????-??.jsonl
 
 # Audio files (too large for git, use git-lfs or external storage)

@@ -20,6 +20,8 @@ import entry
 import pulse
 import runtime
 import inquiry
+import cognition
+from palace import Palace
 
 
 class Clock(datetime):
@@ -415,6 +417,59 @@ class RuntimeTests(unittest.TestCase):
         self.assertEqual(len(events), 1)
         self.assertEqual(self.api.call_count, 2)
         self.assertIn("Runner attention: focused", self.api.call_args.args[3])
+
+    def test_investigation_context_is_recorded_and_recalled_on_next_scheduled_pulse(self):
+        self.config["cognition_enabled"] = True
+        self.config["inquiry_enabled"] = True
+        evidence = entry.entry_append(self.root / "entries", author="tela", entry_kind="observation",
+            content="An earlier frost observation", timestamp=self.yesterday + "T10:00:00Z")
+        reply = json.loads(self.reply)
+        reply["cognition"] = [{"op": "recall", "query": "frost", "content": "Recover the earlier observation"}]
+        self.api.return_value = (json.dumps(reply), "200", 1000, 100)
+        self.pulse()
+        context_record = next(r for r in self.entries() if r.get("data_source") == "cognition_context")
+        response = next(r for r in self.entries() if r.get("data_source") == "pulse_response")
+        self.assertIn(context_record["entry_id"], response["source_refs"])
+        self.assertIn(context_record["content"], self.api.call_args.args[3])
+        self.api.return_value = (self.reply, "200", 1000, 100)
+        (self.mind / "memory.json").write_text("{}")
+        self.pulse()
+        self.assertIn(evidence["entry_id"], self.api.call_args.args[3])
+        self.assertIn(evidence["content"], self.api.call_args.args[3])
+        self.assertEqual(self.api.call_count, 2)
+        self.assertEqual(self.budget()["pulses_run"], 2)
+
+    def test_invalid_cognition_does_not_discard_usable_memory_or_usage(self):
+        self.config["cognition_enabled"] = True
+        reply = json.loads(self.reply)
+        reply["cognition"] = [{"op": "execute", "content": "Run a command"}]
+        self.api.return_value = (json.dumps(reply), "200", 1000, 100)
+        self.pulse()
+        self.assertEqual(self.entries()[-1]["data_source"], "cognition_rejection")
+        self.assertEqual(self.budget()["input_tokens"], 1000)
+        self.assertEqual(json.loads((self.mind / "memory.json").read_text())["notes"], "retained thread")
+
+    def test_unreadable_annotations_stop_before_api_and_keep_working_memory(self):
+        self.config["cognition_enabled"] = True
+        annotations = self.root / "annotations"
+        annotations.mkdir()
+        (annotations / "annotations-2026-01.jsonl").write_text('{"incomplete":')
+        (self.mind / "memory.json").write_text('{"notes":"keep"}')
+        with self.assertRaises(ValueError):
+            self.pulse()
+        self.api.assert_not_called()
+        self.assertEqual(json.loads((self.mind / "memory.json").read_text())["notes"], "keep")
+        self.assertIn("COGNITION_CONTEXT_ERROR", (self.mind / "error.log").read_text())
+
+    def test_dream_reads_investigation_without_running_adapters_or_rewriting_state(self):
+        self.config["cognition_enabled"] = True
+        self.write_log(self.yesterday)
+        self.pulse()
+        before = cognition.threads.project(Palace(self.root).records)
+        self.api.return_value = ("One unresolved question remains; no demonstrated correction yet.", "200", 1000, 100)
+        self.dream()
+        self.assertIn("Investigation view at review time", self.api.call_args.args[3])
+        self.assertEqual(cognition.threads.project(Palace(self.root).records), before)
 
 
 class ProviderResponseTests(unittest.TestCase):

@@ -54,11 +54,16 @@ def entry_append(entries_dir, *, author, entry_kind, content, epistemic_tag="UNK
                        ("pulse_id", pulse_id), ("payload", payload)):
         if value is not None:
             record[key] = value
-    encoded = (json.dumps(record, ensure_ascii=False, allow_nan=False) + "\n").encode("utf-8")
-
     entries_dir = Path(entries_dir)
+    return append_jsonl(entries_dir / f"entries-{now:%Y-%m}.jsonl", record)
+
+
+def append_jsonl(journal, record):
+    """Shared durable append primitive for raw entries and separate annotations."""
+    encoded = (json.dumps(record, ensure_ascii=False, allow_nan=False) + "\n").encode("utf-8")
+    journal = Path(journal)
+    entries_dir = journal.parent
     entries_dir.mkdir(parents=True, exist_ok=True)
-    journal = entries_dir / f"entries-{now:%Y-%m}.jsonl"
     with journal.open("a+b") as stream:
         fcntl.flock(stream, fcntl.LOCK_EX)
         try:
@@ -80,6 +85,22 @@ def entry_append(entries_dir, *, author, entry_kind, content, epistemic_tag="UNK
         finally:
             fcntl.flock(stream, fcntl.LOCK_UN)
     return record
+
+
+def read_jsonl(journal):
+    """Read complete objects under a shared lock; never silently skip a bad tail."""
+    with Path(journal).open(encoding="utf-8") as stream:
+        fcntl.flock(stream, fcntl.LOCK_SH)
+        for number, line in enumerate(stream, 1):
+            try:
+                if not line.endswith("\n"):
+                    raise ValueError("incomplete record")
+                record = json.loads(line)
+                if not isinstance(record, dict):
+                    raise ValueError("record must be an object")
+            except (ValueError, TypeError) as error:
+                raise EntryLogError(f"Unreadable record at {journal}:{number}: {error}") from error
+            yield record
 
 
 def read_entries(entries_dir, *, day=None, entry_ids=None):

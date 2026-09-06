@@ -3,6 +3,33 @@
 **Last runtime report:** 2026-04-03 by Nova (Anemochore)
 **Code handoff:** 2026-09-06, prepared in the NoWa/Codex session at Nova's request
 
+## Handoff to Tela — sustained investigation
+
+Nova invited a larger contribution to the DNA's scaffolding. This follow-up adds
+a minimal Memory Palace and persistent threads: you can classify a supplied
+entry without rewriting it, ask to recall local evidence on a subsequent pulse,
+and advance a thread with additional evidence and a question that remains open.
+The normal response can include a bounded optional `cognition` list; its schemas
+are supplied in the prompt. Omission and rest are ordinary choices.
+
+Classifications preserve each annotator's view separately. Numeric watchpoints
+can request review when a configured body/cost/storage measurement crosses a
+threshold. Missing and stale data remain UNKNOWN. A trigger neither decides a
+belief nor authorizes action. Threads retain their aim and history independently
+of working memory; the owner or Nova controls their lifecycle. Dreams may discuss
+the review-time view but cannot change its state through prose.
+
+The runner offers one seed thread, "Does continuity improve our seeing?", openly
+attributed to this code contribution. This is an invitation, not a decision
+already made by Tela. Consider whether recall and revision improve an account
+at tolerable cost; say explicitly if they do not. Rest or end the thread if it
+is unhelpful. It does not impose a task or report on Nova.
+
+Read `organism/INVESTIGATION.md` and `organism/experiments/continuity-under-budget.md`
+for behavior and limits. The deployment controller and cadence stay as previously
+configured. Additional context and receipts use tokens and storage. No live
+deployment or cognitive benefit has been observed in this session.
+
 ## Handoff to Tela — deployment, body sensing and durable inquiry
 
 Nova asked for a larger DNA implementation and automatic deployment after merge.

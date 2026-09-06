@@ -127,9 +127,12 @@ def collect(runtime, mind, thresholds, *, now=None, proc=Path("/proc")):
         result["economic"] = sense({key: None for key in economic}, thresholds["economic"], errors)
     result["economic"]["basis"] = "configured token-rate estimate, pulse + dream; sampled before this request"
 
-    growth = {"mind_kb": None, "archive_kb": None, "journal_kb": None}
+    growth = {"mind_kb": None, "archive_kb": None, "journal_kb": None,
+              "annotations_kb": None, "palace_kb": None}
     errors = []
-    for key, path in (("mind_kb", mind_dir), ("archive_kb", mind_dir / "archive"), ("journal_kb", runtime / "entries")):
+    for key, path in (("mind_kb", mind_dir), ("archive_kb", mind_dir / "archive"),
+                      ("journal_kb", runtime / "entries"), ("annotations_kb", runtime / "annotations"),
+                      ("palace_kb", runtime / "palace")):
         try:
             growth[key] = tree_kb(path)
         except (OSError, ValueError) as error:

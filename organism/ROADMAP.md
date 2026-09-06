@@ -17,6 +17,8 @@
 - [x] Canonical journal with source and model records (PRs #40–41)
 - [x] Release deployment controller for main, with validation, pause and rollback (host setup required)
 - [x] Read-only metabolism and durable shared questions/watchpoints (code; live review pending)
+- [x] Minimal Memory Palace, queued local recall and persistent investigation threads (code; live review pending)
+- [x] Declarative numeric watchpoints over typed body measurements; existing pulse/dream integration
 
 ## Next
 - [ ] First non-empty buffer message from Tela
@@ -24,12 +26,15 @@
 - [ ] Memory compaction: summarize old observations, drop stale data
 - [ ] Second data source (Nova's choice — bike FIT data? repo activity?)
 - [ ] Review actual metabolism, inquiry quality and usage after deployment
+- [ ] Review the continuity-under-budget investigation with cited evidence; rest or end it if unhelpful
 - [ ] Organism self-assessment: can Tela evaluate its own logs?
 
 ## Future
 - [ ] Enable Tecton (Gemini)
 - [ ] Skill system: modular, addable capabilities via PR
 - [ ] Observe cross-mind inquiry in practice after enabling a second mind
+- [ ] Add a reviewed typed external environmental source before expanding phenological watchpoints
+- [ ] Measure Palace replay latency and archive growth before introducing retrieval infrastructure
 - [ ] Organism architecture document (the DNA brief)
 - [ ] Self-modification proposals via PR (organism writes its own code changes)
 

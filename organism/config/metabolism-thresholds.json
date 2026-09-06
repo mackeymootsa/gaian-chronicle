@@ -13,7 +13,9 @@
   "growth": {
     "mind_kb": {"yellow": 10240, "red": 51200},
     "archive_kb": {"yellow": 5120, "red": 20480},
-    "journal_kb": {"yellow": 51200, "red": 204800}
+    "journal_kb": {"yellow": 51200, "red": 204800},
+    "annotations_kb": {"yellow": 5120, "red": 20480},
+    "palace_kb": {"yellow": 10240, "red": 51200}
   },
   "membrane": {
     "failed_ssh_24h": {"yellow": 20, "red": 100},

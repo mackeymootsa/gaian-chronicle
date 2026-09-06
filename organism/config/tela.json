@@ -11,9 +11,11 @@
   "output_cost_per_mtok": 4.0,
   "cadence": "hourly",
   "inquiry_enabled": true,
+  "cognition_enabled": true,
   "core_docs": [
     "quadrumvirate/charter.md",
-    "care/lingua-gaiana.md"
+    "care/lingua-gaiana.md",
+    "organism/experiments/continuity-under-budget.md"
   ],
   "data_sources": [
     {

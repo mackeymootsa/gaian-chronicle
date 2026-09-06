@@ -124,6 +124,11 @@ The current runner also offers [body sensing and durable shared inquiry](CONTINU
 Questions and peer contributions survive separately from replaceable working
 memory. These features use existing pulses and do not enable another mind.
 
+[Sustained investigation](INVESTIGATION.md) adds attributed Palace classifications,
+local evidence recall, persistent threads and numeric watchpoints. The first
+proposed thread asks whether this continuity improves an account at tolerable
+cost. It can rest or end; no extra model calls or jobs are scheduled.
+
 Source outputs, model responses, and dream inputs/outputs are also retained in
 the [canonical entry log](ENTRIES.md). Journal IDs in logs, dreams, and memory
 let later reviews find the recorded artifacts behind a summary.

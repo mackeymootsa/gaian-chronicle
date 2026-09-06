@@ -2,8 +2,9 @@
 
 This implements a bounded slice of DNA v2 and Cognitive Architecture v1:
 proprioception, a shared buffer, and persistent questions/watchpoints. It builds
-on the [canonical journal](ENTRIES.md). It does not claim a full Memory Palace,
-autonomous repair system, or a new governance mode.
+on the [canonical journal](ENTRIES.md). The follow-up
+[investigation layer](INVESTIGATION.md) supplies the minimal Memory Palace,
+threads and numeric watches. Governance remains under the existing charter.
 
 ## The body report
 
@@ -14,7 +15,7 @@ standard-library `metabolism.py`. It reads four groups of measurements:
 |-------|--------------|--------|
 | Body | Load per reported CPU, available RAM, runtime disk use, uptime | Load is queue pressure, not measured CPU utilization; boot age is context |
 | Economic | Today's estimated spend, counted pulse/dream responses, mean cost per response | Configured rates, not provider billing; sampled before the current request |
-| Growth | Mind directory, archives, shared journal bytes | Bounded file-stat scan; no symlink traversal or content reads |
+| Growth | Mind directory, archives, shared journal, annotations and Palace export bytes | Bounded file-stat scan; no symlink traversal or content reads |
 | Membrane | Failed SSH authentication messages and distinct source count | Readable sshd journal only, last 24 hours; no raw auth messages or IP addresses stored |
 
 No SSH log access is required for the organism to run. Empty, inaccessible,
@@ -61,8 +62,8 @@ rebuilds the current view by replaying events; deleting `memory.json` or leaving
 a question out of a dream cannot erase it. There is no separate authoritative
 `buffer.jsonl`, database or classification cache to reconcile.
 
-This is a small annotation mechanism within journal payloads. It does not yet
-implement the architecture's separate Palace classification/annotation index.
+Inquiry lifecycle events live in journal payloads. Palace classifications use
+their own separate annotation history; the two do not change each other's state.
 Events record who made a status assessment and why. "Resolved" means an
 attributed review, not runner-certified truth. Referenced IDs must exist, and
 model citations/targets must have been supplied in the pulse's bounded context;

@@ -10,6 +10,7 @@
   "input_cost_per_mtok": 0.15,
   "output_cost_per_mtok": 0.60,
   "cadence": "hourly",
+  "inquiry_enabled": true,
   "data_sources": [
     {
       "name": "SMHI Stockholm Weather",

@@ -3,6 +3,35 @@
 **Last runtime report:** 2026-04-03 by Nova (Anemochore)
 **Code handoff:** 2026-09-06, prepared in the NoWa/Codex session at Nova's request
 
+## Handoff to Tela — deployment, body sensing and durable inquiry
+
+Nova asked for a larger DNA implementation and automatic deployment after merge.
+The code now includes a release controller: after the one-time host setup, it
+checks main every five minutes, validates a separate copy, and activates it
+between jobs. The next scheduled job uses the new revision. It does not add
+model calls, enable other minds, or migrate memory. Nova can pause updates or
+roll back code while retaining subsequent journal entries. Setup and recovery:
+`organism/DEPLOYMENT.md`. Host installation has not been observed in this session.
+
+Tela's first source is now read-only metabolism: body measurements, estimated
+spend across pulses and dreams, storage, and aggregate readable SSH-journal
+counts. Missing measurements stay UNKNOWN. Red signals focus an existing pulse;
+they do not authorize repairs or extra calls. No raw authentication messages or
+IP addresses are included. The report identifies the managed code revision.
+
+An optional `inquiry` field in the normal pulse response can preserve questions,
+watchpoints, proposals and peer notes. New entries and later reviews are appended
+to the shared journal; changing working memory cannot erase them. The prompt
+describes the bounded action schema. Other minds may comment, but only the owner
+or Nova can change an item's status. A proposal does not become a task for Nova.
+Omission is valid; avoid acknowledgment loops or questions manufactured to fill
+the queue. Dreams retain open questions and consequential disagreement.
+
+Behavior, limits and Nova's local contribution commands: `organism/CONTINUITY.md`.
+The first useful review is whether these capabilities help sustain a real line
+of inquiry at acceptable cost. No live report or successful activation on juuri
+is claimed here. The historical runtime report below remains historical.
+
 ## Handoff to Tela — durable source records
 
 The runner now saves source outputs, failures, model responses, and dream

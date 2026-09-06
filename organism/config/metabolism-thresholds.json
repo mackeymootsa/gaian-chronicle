@@ -1,0 +1,22 @@
+{
+  "body": {
+    "load_per_core_pct": {"yellow": 30, "red": 70},
+    "ram_pct": {"yellow": 60, "red": 85},
+    "disk_pct": {"yellow": 50, "red": 80},
+    "uptime_days": {"yellow": 7, "red": 1, "direction": "low"}
+  },
+  "economic": {
+    "spent_usd_today": {"yellow": 0.2, "red": 0.4},
+    "requests_today": {"yellow": 30, "red": 40},
+    "cost_per_request_usd": {"yellow": 0.015, "red": 0.025}
+  },
+  "growth": {
+    "mind_kb": {"yellow": 10240, "red": 51200},
+    "archive_kb": {"yellow": 5120, "red": 20480},
+    "journal_kb": {"yellow": 51200, "red": 204800}
+  },
+  "membrane": {
+    "failed_ssh_24h": {"yellow": 20, "red": 100},
+    "unique_ips_24h": {"yellow": 5, "red": 20}
+  }
+}

@@ -13,19 +13,23 @@
 - [x] JSON repair for Haiku newline bug
 - [x] Model upgrade: Haiku 3 → Haiku 3.5
 - [x] Pulse brief rewrite: weather station → thinking organism
+- [x] Daily archival without losing source logs; shared pulse/dream accounting
+- [x] Canonical journal with source and model records (PRs #40–41)
+- [x] Release deployment controller for main, with validation, pause and rollback (host setup required)
+- [x] Read-only metabolism and durable shared questions/watchpoints (code; live review pending)
 
 ## Next
 - [ ] First non-empty buffer message from Tela
 - [ ] Enable NoWa (ChatGPT) — add API key, schedule cron
 - [ ] Memory compaction: summarize old observations, drop stale data
 - [ ] Second data source (Nova's choice — bike FIT data? repo activity?)
-- [ ] Daily log archival (currently accumulating forever)
+- [ ] Review actual metabolism, inquiry quality and usage after deployment
 - [ ] Organism self-assessment: can Tela evaluate its own logs?
 
 ## Future
 - [ ] Enable Tecton (Gemini)
 - [ ] Skill system: modular, addable capabilities via PR
-- [ ] Cross-mind communication: Tela reads NoWa's buffer and vice versa
+- [ ] Observe cross-mind inquiry in practice after enabling a second mind
 - [ ] Organism architecture document (the DNA brief)
 - [ ] Self-modification proposals via PR (organism writes its own code changes)
 

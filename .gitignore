@@ -12,6 +12,7 @@ pulse.log
 error.log
 pulse.lock
 runtime.lock
+inquiry.lock
 entries-????-??.jsonl
 
 # Audio files (too large for git, use git-lfs or external storage)

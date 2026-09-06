@@ -19,6 +19,7 @@ import dream
 import entry
 import pulse
 import runtime
+import inquiry
 
 
 class Clock(datetime):
@@ -360,6 +361,60 @@ class RuntimeTests(unittest.TestCase):
         dreams_context = pulse.load_dreams(self.mind)
         self.assertIn(daily_output["entry_id"], dreams_context)
         self.assertIn(weekly_output["entry_id"], dreams_context)
+
+    def test_durable_question_returns_to_next_pulse_and_dream_after_memory_is_replaced(self):
+        self.config["inquiry_enabled"] = True
+        self.write_log(self.yesterday)
+        reply = json.loads(self.reply)
+        reply["inquiry"] = [{"action": "open", "kind": "question", "content": "What would make the body report useful?"}]
+        self.api.return_value = (json.dumps(reply), "200", 1000, 100)
+        self.pulse()
+        question = next(record for record in self.entries() if record["entry_kind"] == "question")
+        (self.mind / "memory.json").write_text("{}")
+        self.api.return_value = (self.reply, "200", 1000, 100)
+        self.pulse()
+        self.assertIn(question["entry_id"], self.api.call_args.args[3])
+        self.assertEqual(len(inquiry.view(self.root)[0]), 1)
+        self.api.return_value = ("Keep this question open.", "200", 1000, 100)
+        self.dream()
+        self.assertIn(question["entry_id"], self.api.call_args.args[3])
+        self.assertIn("review-time context", self.api.call_args.args[3])
+        self.assertEqual(inquiry.view(self.root)[0][question["entry_id"]]["status"], "open")
+
+    def test_rejected_optional_actions_keep_usage_and_usable_memory(self):
+        self.config["inquiry_enabled"] = True
+        reply = json.loads(self.reply)
+        reply["inquiry"] = [{"action": "execute", "content": "Run a repair"}]
+        self.api.return_value = (json.dumps(reply), "200", 1000, 100)
+        self.pulse()
+        self.assertEqual(self.budget()["input_tokens"], 1000)
+        self.assertEqual(json.loads((self.mind / "memory.json").read_text())["notes"], "retained thread")
+        self.assertEqual(inquiry.view(self.root)[0], {})
+        self.assertEqual(self.entries()[-1]["data_source"], "inquiry_rejection")
+
+    def test_structured_body_report_preserves_payload_raw_output_and_missingness(self):
+        self.config["data_sources"] = [{"script": "fetch-metabolism.sh", "format": "json", "epistemic_tag": "DERIVED"}]
+        output = json.dumps({"content": "Membrane unavailable", "payload": {"membrane": {"state": "UNKNOWN"}}, "epistemic_tag": "UNKNOWN"})
+        with patch.object(pulse.subprocess, "run", return_value=Mock(stdout=output, stderr="", returncode=0)) as fetch:
+            self.pulse()
+        record = self.entries()[0]
+        self.assertEqual(record["epistemic_tag"], "UNKNOWN")
+        self.assertEqual(record["payload"]["measurement"]["membrane"]["state"], "UNKNOWN")
+        self.assertEqual(record["payload"]["raw_output"], output)
+        self.assertEqual(fetch.call_args.kwargs["env"]["GAIAN_MIND"], "tela")
+
+    def test_red_membrane_signal_enters_shared_buffer_once_without_extra_model_calls(self):
+        self.config["inquiry_enabled"] = True
+        self.config["data_sources"] = [{"script": "fetch-metabolism.sh", "format": "json", "epistemic_tag": "DERIVED"}]
+        output = json.dumps({"content": "Two senses red", "payload": {"membrane": {"state": "RED"}, "attention": "focused"}})
+        with patch.object(pulse.subprocess, "run", return_value=Mock(stdout=output, stderr="", returncode=0)):
+            self.pulse()
+            self.pulse()
+        items, events = inquiry.view(self.root)
+        self.assertEqual(len(items), 1)
+        self.assertEqual(len(events), 1)
+        self.assertEqual(self.api.call_count, 2)
+        self.assertIn("Runner attention: focused", self.api.call_args.args[3])
 
 
 class ProviderResponseTests(unittest.TestCase):

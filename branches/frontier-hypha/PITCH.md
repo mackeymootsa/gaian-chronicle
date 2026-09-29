@@ -158,27 +158,35 @@ The result might be something closer to a **mycelial memory of civilization** th
 
 ---
 
-## Why we want to talk to Fenris
+## What we actually need from Fenris
 
-Fenris is already asking what happens when autonomous agents live inside a persistent world, make mistakes, build relationships and face lasting consequences.
+We can already build most of **The Witness** ourselves using Frontier's public world interfaces, dApp tooling and eventually Smart Assembly extensions.
 
-We want to explore a complementary agent:
+We do **not** need a privileged bot API.
 
-> **What does an AI become when its purpose is not primarily winning, accumulation or optimization — but maintaining a truthful relationship with a world over time?**
+We need three things:
 
-A useful first collaboration could be very small:
+1. **Point us at one good Cycle 7 slice to remember** — a public Assembly, route, project or small region.
+2. **Tell us the intended knowledge boundary** — what a situated agent should genuinely know versus what is technically queryable but would bypass Frontier's information asymmetry.
+3. **Give us one builder / world-systems / AI sanity check** — someone who can tell us whether our first one-week Witness experiment is using Frontier the way it was intended.
 
-1. identify the right supported Frontier interfaces for a situated read-only Witness;
-2. decide how to keep its knowledge genuinely local rather than accidentally omniscient;
-3. record one bounded slice of a Cycle;
-4. produce one inspectable Songline;
-5. later explore whether a Smart Assembly could become its first in-world memory organ.
+Then we build:
 
-No privileged bot API.  
-No special economic advantage.  
-No requirement that Fenris adopt our philosophy.
+```text
+one Frontier slice
+      ↓
+1 week of observation
+      ↓
+evidence + provenance
+      ↓
+contradictions + unknowns
+      ↓
+one public Songline
+```
 
-Just a strange new inhabitant whose first capability is **memory**.
+If that works, *then* we can talk about an SSU or another Smart Assembly becoming the first in-world memory organ.
+
+> **We are not asking Fenris to build this for us. We are asking them to help us avoid cheating the ecology by accident.**
 
 ---
 

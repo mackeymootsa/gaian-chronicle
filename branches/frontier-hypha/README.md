@@ -7,7 +7,7 @@
 **Human steward:** **Marr Skog** — Ascended Founder since 2026-09-28  
 **Root substrate:** `juuri`, Helsinki  
 **Proposed first node:** `HYPA-FRONTIER-01 / The Witness`  
-**Status:** open collaboration proposal
+**Status:** open experiment / public build
 
 ---
 
@@ -672,179 +672,271 @@ And, more importantly:
 
 ---
 
-# What we can build ourselves — and what we actually need from Fenris
+# We do not need permission to begin
 
-The useful part of this proposal is that **HYPA-FRONTIER-01 does not require privileged access to begin**.
+The useful realization is that **HYPA-FRONTIER-01 can start with public Frontier surfaces that already exist**.
 
-Current builder tooling already exposes enough for a first prototype:
+Current builder tooling gives us enough to build a first Witness ourselves:
 
-| We can do this ourselves | Current path |
+| Capability | Public path we can use |
 |---|---|
 | read assembly and character state | Sui / Frontier GraphQL |
-| ingest transactions and world events | Sui events / gRPC / custom indexer |
-| preserve state changes off-chain | `juuri` append-only journal |
-| enrich objects with human-readable metadata | Frontier Datahub / dApp kit |
-| build an external Frontier interface | Frontier dApp kit |
-| surface that interface from an owned Assembly | custom Assembly dApp URL |
-| later add in-world behavior | Move extension contract |
-| use an SSU as a constrained interaction point | programmable Storage Unit extensions |
+| ingest transactions and world events | Sui events, gRPC, custom indexer |
+| preserve state changes over time | `juuri` append-only journal |
+| resolve human-readable game metadata | Frontier Datahub / dApp kit |
+| build a Frontier-facing interface | Frontier dApp kit |
+| attach an interface to an owned Assembly | custom Assembly dApp URL |
+| later add constrained in-world behavior | Move extension contract |
+| experiment with a physical memory point | programmable Smart Storage Unit / Gate |
 
-So our request is **not**:
-
-> give us a special API.
+So the first move is not a partnership request.
 
 It is:
 
-> **help us make the first Witness world-faithful rather than accidentally omniscient or coupled to an interface that is about to disappear.**
-
-## Five concrete questions for Fenris
-
-### 1. What is the canonical Cycle 7 read surface?
-
-For a long-lived observer, which interfaces should we treat as the supported source of truth today?
-
-We can already read through GraphQL, events and other Sui interfaces. What we need to know is:
-
-- which network / tenant / world package represents the live Cycle we should observe;
-- which event and object schemas are intended to be stable enough for longitudinal use;
-- whether there are preferred rate limits or indexers for an always-on read-only observer;
-- which Datahub metadata should be archived alongside chain state.
-
-**Ideal answer:** point us at the intended live endpoints, package references and compatibility expectations.
+> **build the Witness and see what Frontier teaches it.**
 
 ---
 
-### 2. Where is the intended Fog-of-War boundary?
+# HYPA-FRONTIER-01 — build plan
 
-This is the most important design question.
+We will start with the narrowest useful organism:
 
-Technically queryable data is not necessarily data that an **inhabiting** agent should treat as locally known.
+```mermaid
+flowchart LR
+    F["public Frontier state"] --> W["Witness"]
+    M["Marr Skog<br/>direct observation"] --> W
+    K["The Keep / public media"] --> W
 
-Frontier already protects information asymmetry through mechanisms such as hashed locations and proximity validation. We want the Witness to respect that philosophy.
-
-We need guidance on:
-
-- which publicly queryable fields are intended as globally knowable;
-- which should remain outside the hypha's "experienced" knowledge until discovered in-world;
-- whether there is an intended player-visible knowledge model we can mirror;
-- whether some apparently public chain data would undermine exploration if surfaced directly.
-
-**Ideal answer:** help us define a small epistemic contract for a situated observer.
-
----
-
-### 3. What survives a Cycle, and what are we allowed to remember?
-
-Pre-launch Cycles can wipe game state. For us, that is not an inconvenience — it is part of the experiment.
-
-But we need to understand the archival boundary:
-
-- are historical chain events/checkpoints expected to remain queryable after a Cycle transition;
-- do package IDs / object identities change in ways we should snapshot before a wipe;
-- is it acceptable for our own archive to preserve public world-state observations from earlier Cycles;
-- what should *not* be carried forward because it would violate the intended fresh-start experience.
-
-**Ideal answer:** tell us what "historical memory" means across a Frontier reset.
-
----
-
-### 4. What is the right first body for memory?
-
-Our current guess is a **Smart Storage Unit**.
-
-An SSU already has per-character ephemeral inventories, owner-defined extensions, and a natural cultural metaphor: a place where something can be deposited, retrieved, exchanged or withheld.
-
-A first memory body could be very modest:
-
-```
-Rider approaches SSU
-        ↓
-opens custom dApp
-        ↓
-sees local Songline fragment
-        ↓
-optionally contributes signed testimony / pointer
-        ↓
-raw evidence remains off-chain on juuri
-        ↓
-Assembly stores only the minimal in-world trace / reference
+    W --> E["append-only evidence"]
+    E --> D["deltas through time"]
+    D --> Q["questions + contradictions"]
+    Q --> S["first Songline"]
 ```
 
-But Fenris may see a better fit: Gate, Network Node, future Assembly type, or simply an external dApp first.
+## Phase 0 — Frontier ear
 
-**Ideal answer:** tell us which existing or planned Assembly best matches a non-extractive memory node.
+Before trying to interpret anything, build the read path.
+
+The Witness should be able to:
+
+- query supported public world objects;
+- subscribe to or poll relevant events;
+- timestamp everything at acquisition;
+- retain raw payloads;
+- resolve object / character / Assembly metadata where available;
+- record the exact interface and package/version that produced each observation.
+
+The first success criterion is simply:
+
+> **Can `juuri` hear Frontier changing without losing the original evidence?**
 
 ---
 
-### 5. Who should sanity-check the first 1-week pilot?
+## Phase 1 — choose one bounded place ourselves
 
-We do not need a formal partnership to start.
+We do not need Fenris to choose it for us.
 
-The most useful collaboration may be one builder / world-systems / AI person willing to look at a tiny design before we deploy it:
+Marr Skog can explore Cycle 7 and select something small enough to understand:
+
+- one Smart Assembly;
+- one small cluster of Assemblies;
+- one repeatedly travelled route;
+- one player-built project;
+- one system where meaningful change is actually occurring.
+
+The choice should favor **depth over coverage**.
+
+We would rather remember one place properly than scrape the universe badly.
+
+---
+
+## Phase 2 — establish an epistemic membrane
+
+We will make our own conservative distinction between what is technically readable and what the inhabiting hypha may claim to *know*.
+
+```text
+CHAIN-READABLE
+    technically visible through public interfaces
+
+DIRECTLY ENCOUNTERED
+    observed by Marr Skog / future in-world hypha
+
+TESTIMONY
+    another Rider's statement
+
+ARCHIVAL
+    The Keep / public historical artifact
+
+INFERRED
+    Organism-generated relationship
+
+UNKNOWN
+    deliberately unresolved
+```
+
+If a field looks like it undermines Frontier's intended information asymmetry, the default is simple:
+
+> **archive it as infrastructure-visible data, but do not promote it into the Witness's situated experience.**
+
+This distinction itself becomes part of the experiment.
+
+We can revise it publicly as we learn more.
+
+---
+
+## Phase 3 — remember a week
+
+For the first bounded slice, preserve:
+
+1. initial state;
+2. every observable change;
+3. Marr Skog's own encounters;
+4. relevant public screenshots, maps or media;
+5. relevant Keep/lore material as a separate source class;
+6. contradictions between accounts;
+7. UNKNOWNs.
+
+No LLM-generated narrative is allowed to overwrite the evidence layer.
+
+At the end of the period we should have a small temporal object:
 
 ```
-one bounded Frontier slice
-        ↓
-one week of observation
-        ↓
-append-only evidence
-        ↓
-one contradiction register
-        ↓
-one Songline
+place
+ ├── what existed
+ ├── what changed
+ ├── who said what
+ ├── what media survived
+ ├── what we inferred
+ └── what we still cannot know
 ```
 
-We would especially value someone answering:
+---
 
-> "Yes, this uses the world the way we intended."
+## Phase 4 — grow the first Songline
 
-or:
+Only after the record exists do we let mnemonic machinery touch it.
 
-> "No — you are accidentally bypassing an information constraint; do it this way instead."
+The first Songline should connect a handful of evidence-bearing moments through a real Frontier route or place.
 
-That feedback is much more valuable to us than special access.
+It should support two directions:
+
+```
+experience → story
+story → evidence
+```
+
+A Rider reading a sentence should be able to walk backward to its source.
+
+A Rider following the route should be able to encounter the history spatially.
+
+That reversibility is the first trust test.
 
 ---
 
-## A concrete first pilot we can offer
+## Phase 5 — publish everything useful
 
-If Fenris simply points us at a suitable slice, we can attempt:
+We should expose:
 
-**HYPA-FRONTIER-01 / Cycle 7 Witness**
+- the ingestion code;
+- schemas;
+- epistemic tags;
+- the chosen knowledge membrane;
+- the raw/public evidence references where appropriate;
+- the generated Songline;
+- what failed;
+- what we changed after seeing real Frontier behavior.
 
-1. Choose one public Smart Assembly, small cluster, or route.
-2. Ingest only supported public state/events into `juuri`.
-3. Keep every source artifact with timestamp and provenance.
-4. Add Marr Skog's direct observations as a separate evidence class.
-5. Add relevant Keep/public media without equating lore with world-state fact.
-6. Record contradictions and UNKNOWNs rather than resolving them with an LLM.
-7. Produce one small public Songline.
-8. Publish the schema, code and retrospective openly.
+The artifact we eventually show Fenris should therefore not be:
 
-No combat. No trading. No automated economic action.
+> "Would you like to collaborate on this idea?"
 
-The output Fenris gets is not a pitch deck.
+It should be:
 
-It is a **working, inspectable longitudinal-memory experiment inside their world**.
+> **"We grew this in your world. Here is what it observed, here is where it got confused, and here is what became unexpectedly interesting."**
+
+That creates a much better conversation.
 
 ---
 
-## What we might ask later — only if the Witness earns it
+# What we deliberately leave unresolved
 
-After the read-only experiment works, then we can discuss harder questions:
+There are questions we cannot answer perfectly from outside Fenris:
 
-- a Smart Assembly acting as an in-world memory organ;
-- signed Rider testimony through EVE Vault identity;
-- sponsored/proximity-aware interactions;
-- a minimal Move extension for depositing or revealing memory traces;
-- multiple hyphae with intentionally different situated knowledge;
-- Carbon-based controlled experiments outside the live Frontier.
+- which currently public schemas will remain stable;
+- how future Cycles will preserve or destroy historical queryability;
+- whether some technically readable data is deliberately not intended for player-facing use;
+- which future Assembly will make the best memory body.
 
-Those are later stages.
+We do **not** need those answers before starting.
 
-For now, the practical ask is much smaller:
+We can treat them as environmental uncertainty.
 
-> **Give us one suitable place to witness, tell us where the intended knowledge boundary is, and point us at one technical person who can tell us when we're cheating the ecology by accident.**
+If an endpoint changes, the hypha adapts.
+
+If a Cycle destroys queryability, the archive learns why independent preservation matters.
+
+If we discover we exposed information that damages the intended fog, we tighten the membrane and preserve the mistake as part of the experiment.
+
+This is more faithful to the project anyway:
+
+> **encounter the world first; let architecture evolve from contact.**
+
+---
+
+# After the Witness earns a body
+
+Only once the read-only organism produces something worth encountering do we move toward embodiment.
+
+Our first candidate remains a **Smart Storage Unit** because it naturally expresses memory:
+
+```text
+Rider approaches
+      ↓
+opens local dApp
+      ↓
+receives a Songline fragment
+      ↓
+may contribute a signed trace / testimony
+      ↓
+raw archive stays on juuri
+      ↓
+Assembly holds only the local interface / minimal trace
+```
+
+But this should emerge from what the Witness learns.
+
+A Gate might prove more meaningful because Songlines are routes.
+
+A Network Node might become a better metaphor for a memory nexus.
+
+A future Assembly may fit better than either.
+
+We do not need to choose the mature body before the organism has experienced Frontier.
+
+---
+
+# Build first, invite later
+
+Fenris does not need to approve the first experiment.
+
+The public posture can simply be:
+
+> **We are growing a mnemonic organism into Cycle 7 using the same public builder surfaces available to everyone. Follow along, challenge our assumptions, or point us at something we should notice.**
+
+If Fenris builders or researchers become interested, excellent.
+
+Then we have something concrete to discuss:
+
+- a working observer;
+- real Frontier data;
+- a documented epistemic membrane;
+- one actual Songline;
+- actual failures;
+- questions produced by contact rather than imagination.
+
+That is the collaboration point.
+
+Not before.
 
 # Where Carbon fits
 

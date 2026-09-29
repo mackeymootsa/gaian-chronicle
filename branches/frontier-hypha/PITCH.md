@@ -158,35 +158,47 @@ The result might be something closer to a **mycelial memory of civilization** th
 
 ---
 
-## What we actually need from Fenris
+## We are building it
 
-We can already build most of **The Witness** ourselves using Frontier's public world interfaces, dApp tooling and eventually Smart Assembly extensions.
+Frontier already exposes enough public builder surface for us to start.
 
-We do **not** need a privileged bot API.
+So we are not waiting for a partnership or special access.
 
-We need three things:
-
-1. **Point us at one good Cycle 7 slice to remember** — a public Assembly, route, project or small region.
-2. **Tell us the intended knowledge boundary** — what a situated agent should genuinely know versus what is technically queryable but would bypass Frontier's information asymmetry.
-3. **Give us one builder / world-systems / AI sanity check** — someone who can tell us whether our first one-week Witness experiment is using Frontier the way it was intended.
-
-Then we build:
+The first experiment is:
 
 ```text
-one Frontier slice
-      ↓
-1 week of observation
-      ↓
-evidence + provenance
-      ↓
-contradictions + unknowns
-      ↓
-one public Songline
+choose one Cycle 7 place
+        ↓
+listen to public world state
+        ↓
+preserve a week of evidence
+        ↓
+separate observation / testimony / lore / inference
+        ↓
+keep contradictions unresolved
+        ↓
+grow one Songline
+        ↓
+publish the code + record + failures
 ```
 
-If that works, *then* we can talk about an SSU or another Smart Assembly becoming the first in-world memory organ.
+The first question is not whether Fenris says yes.
 
-> **We are not asking Fenris to build this for us. We are asking them to help us avoid cheating the ecology by accident.**
+It is:
+
+> **Can a tiny synthetic Witness form an honest memory of one place in Frontier?**
+
+If it works, we show it to Fenris and the community.
+
+If it fails, the failure becomes part of the archive.
+
+If we discover that technically visible information violates the spirit of Frontier's fog, we tighten the Witness's epistemic membrane and document why.
+
+Later, if the organism earns embodiment, we can give it a Smart Assembly memory organ.
+
+For now:
+
+> **one Witness · one place · one Cycle · one honest memory**
 
 ---
 

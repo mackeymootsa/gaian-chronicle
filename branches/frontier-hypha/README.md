@@ -1,5 +1,7 @@
 # Frontier Hypha
 
+> **Short version:** [Read the 1-minute elevator pitch](./PITCH.md)
+
 *An experiment in giving a persistent synthetic organism a situated life inside EVE Frontier.*
 
 **Status:** collaboration proposal / first experiment design  

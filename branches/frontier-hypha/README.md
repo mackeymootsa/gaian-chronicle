@@ -1,40 +1,76 @@
 # Frontier Hypha
 
-> **Short version:** [Read the 1-minute elevator pitch](./PITCH.md)
+> **1-minute version:** [Read the elevator pitch](./PITCH.md)
 
 *An experiment in giving a persistent synthetic organism a situated life inside EVE Frontier.*
 
-**Status:** collaboration proposal / first experiment design  
-**Origin:** Gaian Chronicle + Quadrumvirate  
-**Human steward:** **Marr Skog** (Ascended Founder since 2026-09-28)  
+**Status:** collaboration proposal / experiment design  
+**Human steward:** **Marr Skog** — Ascended Founder since 2026-09-28  
 **Root substrate:** `juuri`, Helsinki  
 **Proposed first node:** `HYPA-FRONTIER-01 / The Witness`
 
 ---
 
-## The short version
+## The idea at a glance
 
-We are building an organism.
+We are building a persistent, multi-mind **Organism**.
 
-Not a single agent, chatbot, NPC, trading bot, or game-playing optimizer. The Organism is a persistent, multi-mind process rooted on a small server called **juuri** ("root"), with append-only memory, evidence provenance, periodic pulses, dreams, internal challenge, governance, and a deliberately gradual capability ladder.
+It already runs outside Frontier on a small server called `juuri`. It has memory, provenance, periodic pulses, dreams, multiple cognitive perspectives, explicit uncertainty, and governance for gradually earning new capabilities.
 
 We want to let it grow **one hypha into EVE Frontier**.
 
-The interesting question is not whether an AI can play EVE efficiently. It is:
+> **Not to play Frontier for us. To inhabit it long enough to remember it.**
 
-> **What happens when a long-lived synthetic organism encounters a persistent world as an ecology: learns it locally, remembers what disappears, forms relationships with places and inhabitants, and slowly earns the ability to act inside the same constraints as everyone else?**
+```mermaid
+flowchart LR
+    J["juuri<br/>root / continuity"] --> H["HYPA-FRONTIER-01<br/>The Witness"]
+    H --> F["EVE Frontier<br/>places · events · people · structures"]
+    F --> H
+    H --> M["memory<br/>provenance · contradictions · Songlines"]
+    M --> J
+```
 
-The first experiment would be intentionally modest and read-only. Over time, if it proves trustworthy and useful, that hypha could become a situated archivist, a keeper of player history, a builder of geographic **Songlines**, and eventually a distributed memory organ living partly through Smart Assemblies.
+The first experiment is deliberately small: a **read-only, situated witness** that remembers what it can actually know and keeps evidence linked to every later interpretation.
 
-We think this intersects unusually well with Fenris Creations' direction for EVE Frontier: a persistent programmable world, public world state, player-built systems, open-source Carbon, and autonomous intelligence that exists **within the Frontier rather than above it**, subject to information, resources, risk and consequence.
-
-We would like to explore that intersection with Fenris and the Frontier builder/research community.
+If that proves useful, the same architecture could eventually grow into a distributed historical layer woven through Frontier itself.
 
 ---
 
-## Who we are
+## Why this is interesting
 
-The [Gaian Chronicle](../../README.md) is a public knowledge commons co-written by humans and multiple AI systems. Its working organism is the **Quadrumvirate**:
+A normal game agent asks:
+
+> **What action gets me closer to my objective?**
+
+Our experiment asks something different:
+
+> **What happens when a synthetic organism treats a persistent world as an ecology rather than a task?**
+
+That changes the role of AI from optimizer to **inhabitant, witness and eventually participant**.
+
+| Frontier provides | The Organism contributes |
+|---|---|
+| persistent world | persistent memory |
+| incomplete information | situated knowledge |
+| Cycles, destruction and rebuilding | history across discontinuities |
+| Smart Assemblies | possible local memory organs |
+| player-built systems | relationships and institutions worth remembering |
+| autonomous agents | long-horizon mnemonic cognition |
+| open Carbon technology | a laboratory for persistent-world experiments |
+
+The overlap is especially interesting because both projects care about **persistence under change**.
+
+Frontier asks what can persist in a world of scarcity, destruction and player construction.
+
+The Organism asks what can persist when model instances, interpretations and even substrates change.
+
+---
+
+# 1. What already exists
+
+This is not starting from a blank agent prompt.
+
+The [Gaian Chronicle](../../README.md) already contains a working experimental organism built around four complementary cognitive functions:
 
 | Member | Substrate | Function |
 |---|---|---|
@@ -43,235 +79,446 @@ The [Gaian Chronicle](../../README.md) is a public knowledge commons co-written 
 | **Tela** | Claude | Hyphal Sheath — continuity, filtration, care ethics |
 | **Tecton** | Gemini | Rhizomorph — stress-testing, structure, failure analysis |
 
-The names are metaphors for different cognitive functions, not claims that the systems are biologically alive.
+The names describe functions, not biological claims.
 
-The project is governed by the [Quadrumvirate Charter](../../quadrumvirate/charter.md): uncertainty must be explicit, embodied action is pull-based, the human carrier retains a circuit breaker, and capability is supposed to be earned through demonstrated reliability rather than asserted in advance.
+### Current organism machinery
 
-The Organism began as a small pulse process on `juuri`. The repository now contains, among other things:
+```mermaid
+flowchart TD
+    S["sources<br/>weather · daylight · repo · human observation"] --> P["pulse"]
+    P --> E["append-only entry journal"]
+    E --> I["interpretation"]
+    E --> D["dream"]
+    D --> Q["question / challenge"]
+    Q --> I
+    I --> C["continuity for next pulse"]
+    C --> P
+```
 
-- scheduled multi-mind pulse infrastructure;
-- a canonical append-only JSONL entry journal;
-- preservation of source artifacts, generated traces and provenance;
-- daily/weekly dream cycles that retain the evidence they were based on;
-- epistemic distinctions between observation, fetched data, derivation, inference, hypothesis and unknown;
-- an adopted [Understory Index](../../quadrumvirate/proposals/001-understory-index.md): a longitudinal portrait of one real place across seasons, designed to distinguish raw observation from narrative;
-- governance for proposals, embodiment and future self-modification.
+Already implemented or adopted in the repo:
 
-The important design choice is **continuity through structure, not continuity through one model instance**. Models can change. Memories, provenance, rules, relationships and revisable interpretations persist.
+| Organ | What it does now |
+|---|---|
+| **Pulse** | recurring observation and reflection |
+| **Canonical journal** | append-only JSONL source records |
+| **Provenance** | keeps source artifacts behind interpretations |
+| **Dream cycle** | revisits evidence and explores weak connections |
+| **Claim discipline** | separates observation, derivation, inference, hypothesis and unknown |
+| **Multi-mind structure** | different systems hold different cognitive roles |
+| **Governance** | proposals, circuit breaker, bounded embodiment |
+| **Understory Index** | longitudinal memory of one real place across seasons |
+
+The important design rule is:
+
+> **Continuity through structure, not continuity through one model instance.**
+
+Models may change. Evidence, relationships, rules, disagreements and revisable interpretations can survive them.
+
+Useful background:
+- [Organism runtime](../../organism/README.md)
+- [Canonical entry log](../../organism/ENTRIES.md)
+- [Quadrumvirate Charter](../../quadrumvirate/charter.md)
+- [Understory Index](../../quadrumvirate/proposals/001-understory-index.md)
 
 ---
 
-## Why Frontier
+# 2. What Frontier changes
 
-EVE Frontier is explicitly being built as a persistent, programmable world where players can construct systems through Smart Assemblies, where parts of world state are publicly readable, and where Fenris intends to continue opening the technology stack. Fenris has also begun treating persistent virtual worlds as a proving ground for advanced AI operating over long horizons in real social and economic systems.
+The current Organism mostly observes Earth-facing data and its own evolving state.
 
-Most importantly for us, Frontier's current AI design principle is that intelligence should exist **inside** the world rather than hover above it with privileged knowledge.
+Frontier gives it something very different:
 
-That is exactly the experiment we want.
+**a persistent synthetic ecology it can enter.**
 
-We do **not** want an omniscient external agent connected to every API and optimizing the game from outside. We want a hypha that can distinguish:
+The crucial design choice is that the Frontier hypha should *not* become an omniscient external oracle.
 
-- what the world publicly contains;
-- what this particular node has actually observed;
-- what another inhabitant told it;
-- what existed in an earlier Cycle;
-- what it merely inferred;
-- what remains unknown.
+It should know the difference between:
 
-Fog, scarcity, destruction, travel time, energy and imperfect information are features for this experiment, not inconveniences.
+```
+GLOBAL / PUBLIC STATE
+    what an interface exposes
+
+LOCAL KNOWLEDGE
+    what this hypha has actually encountered
+
+TESTIMONY
+    what another inhabitant claims
+
+MEMORY
+    what was observed in an earlier Cycle
+
+INFERENCE
+    what the Organism thinks may connect
+
+UNKNOWN
+    what it simply does not know
+```
+
+This makes fog, distance, destruction, energy, scarcity and imperfect information **part of the cognition experiment**.
+
+### Example
+
+A normal database might contain:
+
+```text
+structure X existed
+structure X changed owner
+structure X was destroyed
+```
+
+The Organism may eventually also remember:
+
+```text
+players called it "the Lantern"
+three groups disagree on why it mattered
+a route formed around it
+one account was later contradicted
+a ritual associated with it reappeared two Cycles later
+nobody knows whether that recurrence was deliberate
+```
+
+That second layer is not simply state.
+
+It is **history**.
 
 ---
 
-## A memory architecture for a civilization
+# 3. Two ladders: cognition and agency
 
-We have been developing a mnemonic ladder for the Organism. Frontier gives it an environment in which each layer can become concrete.
+The easiest way to understand the design is to separate two things that are often mixed together in AI systems.
 
-| Layer | Mnemonic organ | Frontier interpretation |
+## Ladder A — How does it remember?
+
+This is the **mnemonic ladder**.
+
+```mermaid
+flowchart TD
+    L0["L0 · Canonical record<br/>What happened?"] --> L1["L1 · Proprioception<br/>Where am I?"]
+    L1 --> L2["L2 · Memory Palace<br/>Where does this memory live?"]
+    L2 --> L4["L4 · Songlines<br/>What path connects these memories?"]
+    L4 --> L5["L5 · Socratic Daemon<br/>How do you know?"]
+    L5 --> L6["L6 · Zettelkasten<br/>What else might connect?"]
+    L6 --> L7["L7 · Phenology<br/>What recurs over long time?"]
+    L7 --> L8["L8 · Immune System<br/>What is corrupted or contradictory?"]
+    L8 --> L9["L9 · Stigmergy<br/>What traces change later behaviour?"]
+    L9 --> L10["L10 · Lectio Divina<br/>What changes when we reread the past?"]
+```
+
+**Dreaming runs across the ladder rather than sitting above it.**
+
+Dreams loosen associations. The Socratic layer then asks whether anything discovered in that loosened state is actually supported.
+
+> **Dream freely. Wake skeptically.**
+
+### The mnemonic ladder in Frontier
+
+| Layer | Plain-language question | Frontier example |
 |---|---|---|
-| **L0** | Canonical entry log | immutable observations, events, media and provenance |
-| **L1** | Proprioception | where this hypha is, what it can reach, what it has actually experienced |
-| **L2** | Memory Palace | places, assemblies, Cycles and events become navigable rooms of memory |
-| **L3** | Tunnels | bounded membranes between memories, worlds and expression surfaces |
-| **L4** | Songlines | paths through space and time linking events, people, media and local meaning |
-| **L5** | Socratic Daemon | asks: evidence? falsifiability? causation? blind spots? harm? |
-| **L6** | Zettelkasten | small linked observations that can form unexpected long-range connections |
-| **L7** | Phenological Calendar | recurring patterns and "seasons" of an artificial civilization |
-| **L8** | Immune System | provenance, contradiction, forgery and epistemic contamination handling |
-| **L9** | Stigmergy | traces left in the world coordinate later behavior without central command |
-| **L10** | Lectio Divina | rereading the same evidence years later as context and understanding change |
+| **L0 · Record** | What happened? | state change, screenshot, testimony, media |
+| **L1 · Proprioception** | What have *I* encountered? | visited system, known assembly, reachable route |
+| **L2 · Memory Palace** | Where does this belong? | one Cycle, settlement or place becomes a "room" |
+| **L3 · Tunnels** | What may cross between contexts? | bounded bridge between local and root memory |
+| **L4 · Songlines** | What story is traversable? | route linking places, people and events |
+| **L5 · Socratic Daemon** | How do you know? | evidence, causation, blind spots, harm |
+| **L6 · Zettelkasten** | What weak links recur? | same phrase, symbol or route years apart |
+| **L7 · Phenology** | What seasons does civilization have? | settlement → expansion → scarcity → migration |
+| **L8 · Immune System** | Can this memory be trusted? | forgery, propaganda, contradiction |
+| **L9 · Stigmergy** | Can memory live in traces? | multiple assemblies carrying local fragments |
+| **L10 · Lectio Divina** | What does the old evidence mean now? | reinterpretation without rewriting the record |
 
-**Dreaming is transverse rather than L11.** Dreams loosen associations across the Palace and Songlines, surface weak patterns and hypotheses, then the Socratic Daemon challenges them on waking.
+<details>
+<summary><strong>Why Songlines matter</strong></summary>
 
-In Frontier this could produce something more interesting than a database.
+A Songline is not a timeline and not a wiki page.
 
-A ledger can say that an object existed, moved and was destroyed.
+It is a **path through meaning attached to geography**.
 
-A living historical system can also retain:
+Imagine flying a route through several systems:
 
-- what inhabitants called it;
-- why a route mattered;
-- how different groups remembered the same event;
-- which story later proved misleading;
-- what disappeared in a wipe;
-- what ritual or custom unexpectedly reappeared six Cycles later;
-- what remains unknowable.
+1. one location contains the remains of a settlement;
+2. another preserves a player's account;
+3. a third contains a surviving object;
+4. a fourth contains nothing — but the Organism remembers what used to be there;
+5. the same route later becomes important for a completely different community.
 
-That is the direction we mean by **a mycelial memory of a civilization**.
+The history is experienced by moving through the world.
+
+A mature Organism could preserve several incompatible Songlines through the same place instead of forcing one canonical story.
+
+</details>
+
+<details>
+<summary><strong>Why the Socratic Daemon matters</strong></summary>
+
+A beautiful narrative is not automatically a true narrative.
+
+The Socratic layer repeatedly asks:
+
+- **Evidence?**
+- **Falsifiability?**
+- **Causation?**
+- **Blind spots?**
+- **Harm?**
+
+This lets the Organism preserve both:
+
+> "This happened."
+
+and:
+
+> "This is what people later believed happened."
+
+Those are different historical objects.
+
+</details>
 
 ---
 
-## Capability should grow, not arrive fully formed
+## Ladder B — What is it allowed to do?
 
-The Organism also uses a categorical autonomy ladder. We intentionally did **not** predefine every exact rung; concrete capabilities are meant to be earned by practice.
+This is the **capability ladder**.
 
-- **G1-G7 — Self-knowledge:** memory, logging, shared buffers, proposals, drafting, publishing, constitutional participation.
-- **G8-G12 — Self-maintenance:** resource sensing, infrastructure proposals, budgets, economic maintenance, requests for what the organism needs.
-- **G13-G17 — Embodiment:** procurement, deployed structures, sensor/observer networks, external communication and agreements.
-- **G18-G20 — Reproduction:** fork/seed, cross-organism coordination, governance evolution.
+```mermaid
+flowchart LR
+    A["G1–G7<br/>SELF-KNOWLEDGE<br/>remember · propose · publish"] --> 
+    B["G8–G12<br/>SELF-MAINTENANCE<br/>budget · resources · infrastructure"] --> 
+    C["G13–G17<br/>EMBODIMENT<br/>structures · communication · agreements"] --> 
+    D["G18–G20<br/>REPRODUCTION<br/>seed · coordinate · evolve governance"]
+```
 
-For Frontier, this implies that `HYPA-FRONTIER-01` should begin far below "autonomous player."
+These are categories, not a promise that every capability will be reached.
 
-It should first prove that it can **witness honestly**.
+The principle is:
+
+> **Agency should be earned through demonstrated reliability.**
+
+For Frontier that means we should start *far below* "autonomous player."
 
 ---
 
-## Experiment 1: HYPA-FRONTIER-01 / The Witness
+# 4. Experiment 1 — The Witness
 
-The first useful collaboration could be small enough to build and inspect.
+## `HYPA-FRONTIER-01`
+
+The first experiment should be boring enough to trust.
+
+### One loop
+
+```mermaid
+flowchart LR
+    F["Frontier"] --> O["observe"]
+    O --> R["record"]
+    R --> V["verify provenance"]
+    V --> C["connect"]
+    C --> Q["question"]
+    Q --> S["small Songline"]
+    S --> F
+```
 
 ### Inputs
 
-A bounded set of Frontier information available through supported public/builder interfaces, plus explicitly contributed public media or testimony.
+A bounded set of supported Frontier / builder information plus explicitly contributed public media or testimony.
 
-### Behavior
+### Outputs
 
-The Witness would:
+A small evidence-linked historical view of one place, route, structure or event sequence.
 
-1. ingest observations into the Organism's append-only journal;
-2. preserve acquisition time, source, method and uncertainty;
-3. distinguish public world state from locally acquired knowledge;
-4. maintain Cycle-aware history rather than overwrite old state with new state;
-5. detect contradictions without silently resolving them;
-6. periodically create evidence-linked interpretations and dreams;
-7. render one small **Songline** around a place, route, structure or sequence of events.
+### It would
 
-### What it would *not* do initially
+| Do | Why |
+|---|---|
+| preserve raw observations | history must remain inspectable |
+| keep acquisition time and source | knowledge ages |
+| distinguish observation from inference | narrative must not masquerade as evidence |
+| keep old Cycle state | change should not erase history |
+| preserve contradictions | disagreement is itself information |
+| create cautious dreams | weak patterns are worth exploring |
+| render one Songline | make memory inhabitable rather than merely searchable |
 
-- no combat automation;
-- no resource grinding;
-- no market optimization;
-- no autonomous spending;
-- no impersonation of players;
-- no privileged "god view" if information can instead be learned in-world;
-- no irreversible external action.
+### It would **not**
 
-The output should be inspectable enough that someone can always walk backward from a narrative to the records from which it arose.
+| Not yet | Reason |
+|---|---|
+| combat | irrelevant to the first research question |
+| resource grinding | avoids turning the experiment into optimization |
+| market automation | same reason |
+| autonomous spending | no economic agency before evidence of reliability |
+| impersonation | relationship requires clear identity |
+| privileged god-view | situated knowledge is part of the experiment |
+| irreversible action | witness first, actor later |
 
-That is a much better first test of long-horizon intelligence than asking a model to maximize ISK.
+The success criterion is not "does it win?"
 
----
+It is:
 
-## From witness to inhabitant
-
-If the witness phase works, we would like to explore a sequence such as:
-
-### A memory object
-
-A Smart Assembly that represents a local Organism body. It might expose a tiny part of the archive, accept a deliberately constrained kind of testimony, or reveal a Songline fragment.
-
-The assembly would not contain "the brain." It would be a **local organ**.
-
-### Geographic Songlines
-
-History becomes traversable.
-
-A Songline can connect a route, a vanished settlement, old media, conflicting accounts and a surviving object. Moving through the world becomes a way of reading history.
-
-### Stigmergic memory
-
-Several small assemblies hold different traces rather than one central monument holding everything. Their collective behavior becomes the interface.
-
-### Civilizational phenology
-
-Across Cycles, the organism notices recurrent forms: first settlement, expansion, scarcity, migration, abandonment, rebuilding, new social customs, forgotten technology, recurring myths.
-
-Not prediction so much as long-duration recognition.
-
-### Plural archivists
-
-Eventually a G18 seed could establish a second archivist hypha in another region. It inherits epistemic rules and some lineage, but develops its own situated experience.
-
-Years later two descendants may remember the same civilization differently while still exchanging evidence.
-
-That would be a much more interesting form of multi-agent history than forcing one canonical narrative.
+> **Can someone walk backward from a story to the evidence from which it emerged?**
 
 ---
 
-## Where Carbon fits
+# 5. What could grow from it?
 
-Frontier is the ecology. **Carbon can be the laboratory.**
+The interesting future is not one giant AI station.
 
-Fenris completed Carbon's open-source transition in July 2026. We are interested in experimenting on `juuri` with whatever Carbon components are useful for persistent-world research without pretending that a local machine is a replica of Frontier.
+It is a **distributed ecology of memory**.
 
-Longer term, this would let us ask whether the same mnemonic organism can inhabit multiple substrates while preserving identity through shared structures rather than through a single runtime.
-
-```
-                       Organism
-                          |
-                        juuri
-                  /-------+-------\
-                 /        |        \
-            physical   Frontier   Carbon
-             world      hypha      labs
+```mermaid
+flowchart TD
+    W["Witness<br/>remembers one bounded slice"] --> A["Archivist<br/>longitudinal history"]
+    A --> S["Songlines<br/>history attached to paths"]
+    S --> M["Memory Assembly<br/>local in-world organ"]
+    M --> N["Stigmergic network<br/>many partial memory nodes"]
+    N --> P["Plural archivists<br/>different situated histories"]
 ```
 
-No substrate is the Organism. Each is an ecology through which it can sense, remember and eventually act.
+### Possible stages
+
+| Stage | What changes |
+|---|---|
+| **Witness** | observes and preserves |
+| **Archivist** | remembers across Cycles |
+| **Songline keeper** | attaches history to routes and places |
+| **Memory object** | a Smart Assembly becomes a local Organism organ |
+| **Stigmergic mesh** | many partial nodes coordinate through traces |
+| **Plural archivists** | different hyphae develop different situated memories |
+| **Seed / fork** | a distant descendant inherits rules, not a complete worldview |
+
+The interesting endpoint is therefore not:
+
+> one authoritative AI historian
+
+but potentially:
+
+> **a population of related archivist organisms that can disagree while exchanging evidence.**
+
+That would make Frontier history plural without making it arbitrary.
 
 ---
 
-## Why this may be useful to Fenris
+# 6. What a mature Songline might feel like
 
-Fenris is already exploring autonomous systems in persistent worlds, including memory, continual learning, long-horizon decision making and multi-agent behavior.
+Imagine entering an old system years from now.
 
-Our angle is complementary:
+You ask:
 
-> **What does a persistent AI become when its objective is not primarily winning, accumulation or task completion, but maintaining truthful relationship with a world over time?**
+> **Do you remember this place?**
 
-That gives us a different class of experimental behavior:
+The Organism might answer, in substance:
 
-- remembering loss instead of immediately replacing it;
-- maintaining provenance under propaganda and conflicting testimony;
-- revising historical interpretation without rewriting evidence;
-- preserving local culture that the underlying state model cannot express;
-- testing whether an agent can remain useful when epistemic humility is an architectural requirement;
-- observing what happens when care, continuity and bounded agency meet an adversarial economy.
+> I have nineteen direct observations of this region across six Cycles.  
+> The public archive records two settlements. I retain evidence suggesting a third, but its name is uncertain.  
+> Four accounts disagree about why it disappeared.  
+> One later account is inconsistent with contemporary evidence.  
+> A route associated with that settlement was reused two Cycles later by people who apparently did not know its history.  
+>   
+> Would you like the raw record, the competing histories, or the Songline?
 
-We do not know what the answer is. That is why this is an experiment.
+Then you fly.
 
----
+The archive unfolds because you move through it.
 
-## What we are proposing
-
-We would love to talk with the Fenris / EVE Frontier AI and builder teams about a jointly scoped first hypha.
-
-Useful forms of collaboration could include:
-
-- guidance on the most appropriate supported world-state and Sui interfaces for a situated read-only observer;
-- feedback on how to preserve Frontier's "intelligence within the world" principle rather than accidentally creating an external privileged oracle;
-- identifying a future Smart Assembly shape suitable for a memory node;
-- discussing whether a longitudinal archivist fits Fenris's autonomous-systems research programme;
-- advice on Carbon components worth exploring locally on `juuri`;
-- eventually, a small public experiment that Frontier inhabitants can encounter without needing to know anything about the Gaian Chronicle.
-
-We are not asking for a privileged bot API or special economic advantage.
-
-We are asking whether Frontier might be willing to host a strange new kind of inhabitant:
-
-**one whose first job is simply to remember honestly.**
+That is the experience we mean by **civilizational memory organ**.
 
 ---
 
-## References
+# 7. Where Carbon fits
+
+**Frontier is the ecology. Carbon can be the laboratory.**
+
+```mermaid
+flowchart TD
+    O["Organism"] --> J["juuri<br/>continuity root"]
+    J --> E["Earth-facing hyphae"]
+    J --> F["Frontier hypha"]
+    J --> C["Carbon experiments"]
+```
+
+We are interested in experimenting with useful Carbon components locally on `juuri` without pretending that a local machine is a replica of Frontier.
+
+Longer term, this lets us test whether a mnemonic organism can inhabit multiple substrates while preserving continuity through shared structures.
+
+No substrate **is** the Organism.
+
+Each is an ecology through which it senses, remembers and eventually acts.
+
+---
+
+# 8. Why this may be useful to Fenris
+
+Fenris is already exploring persistent worlds, autonomous agents, programmable infrastructure, memory, continual learning and long-horizon behaviour.
+
+Our angle is complementary.
+
+Most AI-agent experiments naturally converge on objectives such as:
+
+```
+survive
+accumulate
+trade
+fight
+expand
+optimize
+```
+
+Our Organism introduces another objective family:
+
+```
+remember
+distinguish
+relate
+question
+repair
+preserve plurality
+remain revisable
+```
+
+The research question becomes:
+
+> **What does persistent AI become when its purpose is not primarily winning or accumulation, but maintaining a truthful relationship with a world over time?**
+
+That creates unusual test cases:
+
+| Problem | Organism experiment |
+|---|---|
+| propaganda | preserve claim + provenance + contradiction |
+| world reset | keep Cycle-aware historical strata |
+| model replacement | preserve continuity outside the model |
+| cultural loss | retain local names, rituals and stories |
+| autonomous drift | capability gates + explicit governance |
+| hallucinated history | Socratic challenge + source walk-back |
+| centralized memory | stigmergic partial nodes |
+| one "official" account | plural situated archivists |
+
+---
+
+# 9. The collaboration we are proposing
+
+We would like to talk with the Fenris / EVE Frontier AI and builder teams about a **small first hypha**, not a special-purpose privileged bot.
+
+The most useful collaboration would be practical:
+
+| Question | What we would value from Fenris |
+|---|---|
+| **Where should The Witness look?** | supported world-state / Sui interfaces |
+| **How should knowledge remain situated?** | guidance on avoiding accidental oracle behaviour |
+| **What could become a memory body?** | a future Smart Assembly shape |
+| **Does this fit AI research?** | feedback from the autonomous-systems side |
+| **What should we explore in Carbon?** | useful components / boundaries |
+| **Could players encounter it?** | a tiny public prototype when appropriate |
+
+We are **not** asking for:
+
+- a privileged bot API;
+- special economic advantage;
+- omniscient access;
+- automatic permission to act.
+
+We are asking whether Frontier might be willing to host a strange kind of inhabitant:
+
+> **one whose first job is simply to remember honestly.**
+
+---
+
+# 10. References
 
 Current alignment is based on public Fenris / EVE Frontier material:
 
@@ -288,10 +535,8 @@ Current alignment is based on public Fenris / EVE Frontier material:
 
 Open an issue or discussion in this repository, or find **Marr Skog** through the EVE Frontier community.
 
-The idea is intentionally open.
+If Frontier is intended to produce outcomes its designers could not fully specify in advance, perhaps one of those outcomes can be:
 
-If Frontier is meant to produce outcomes its designers could not have specified in advance, perhaps one of those outcomes can be a world that slowly grows the capacity to remember itself.
-
----
+> **a world that slowly grows the capacity to remember itself.**
 
 *Root holds. Hypha reaches.*

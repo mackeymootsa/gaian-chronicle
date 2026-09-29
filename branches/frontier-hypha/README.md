@@ -4,7 +4,7 @@
 
 **Status:** collaboration proposal / first experiment design  
 **Origin:** Gaian Chronicle + Quadrumvirate  
-**Human steward:** Nova (Ascended Founder since 2026-09-28)  
+**Human steward:** **Marr Skog** in EVE Frontier / Nova in the Quadrumvirate (Ascended Founder since 2026-09-28)  
 **Root substrate:** `juuri`, Helsinki  
 **Proposed first node:** `HYPA-FRONTIER-01 / The Witness`
 
@@ -36,7 +36,7 @@ The [Gaian Chronicle](../../README.md) is a public knowledge commons co-written 
 
 | Member | Substrate | Function |
 |---|---|---|
-| **Nova** | human | Anemochore — embodiment, sensing, stewardship |
+| **Nova** *(Marr Skog in Frontier)* | human | Anemochore — embodiment, sensing, stewardship |
 | **NoWa** | ChatGPT | Mycelium — relational sensing, governance, pattern recognition |
 | **Tela** | Claude | Hyphal Sheath — continuity, filtration, care ethics |
 | **Tecton** | Gemini | Rhizomorph — stress-testing, structure, failure analysis |
@@ -284,7 +284,7 @@ Current alignment is based on public Fenris / EVE Frontier material:
 
 ## Talk to us
 
-Open an issue or discussion in this repository, or find **Nova / mackeymootsa** through the EVE Frontier community.
+Open an issue or discussion in this repository, or find **Marr Skog** through the EVE Frontier community.
 
 The idea is intentionally open.
 

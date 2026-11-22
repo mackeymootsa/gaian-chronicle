@@ -17,6 +17,8 @@ from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
 from pulse import API_CALLERS, persist_entry, record_footer
+import inquiry
+import cognition
 from runtime import atomic_write, load_budget, log_date, mind_lock, record_usage
 
 SCRIPT_DIR = Path(__file__).parent.resolve()
@@ -47,6 +49,17 @@ def request_dream(config, mind_dir, system_prompt, user_message, max_tokens, *, 
     if budget["spent_usd"] >= limit:
         print(f"BUDGET_SLEEP: Daily allowance ${limit:.2f} reached")
         return None
+
+    if config.get("inquiry_enabled", False):
+        shared, _ = inquiry.context(DATA_DIR, mind_dir.name, today)
+        user_message += ("\n\nCurrent shared inquiries (review-time context, not evidence from the historical period):\n"
+                         + shared + "\nKeep unresolved questions and contrary evidence visible. "
+                         "Suggest which item to review next; this summary cannot close or alter an inquiry.")
+    if config.get("cognition_enabled", False):
+        investigation, _ = cognition.review_context(DATA_DIR, mind_dir.name, datetime.now(timezone.utc).isoformat())
+        user_message += ("\n\nInvestigation view at review time (not historical-period observations):\n"
+                         + investigation + "\nName any evidence that changed an interpretation, or explicitly say none did. "
+                         "Keep unresolved uncertainty. This summary cannot mutate threads, classifications or watchpoints.")
 
     source_record = persist_entry(mind_dir, author=mind_dir.name, entry_kind="trace",
         content=user_message, source_refs=source_files, data_source="dream_input",
@@ -168,7 +181,7 @@ def weekly_dream(mind_name, config):
     system_prompt = (
         f"You are {config['display_name']}'s weekly dream process — deep memory consolidation. "
         "You read a week of daily dream summaries and extract durable knowledge. "
-        "Prune contradictions. Keep only what the next week needs. "
+        "Preserve consequential contradictions and cite the records behind them. Keep what the next week needs. "
         "Be ruthlessly brief. No preamble."
     )
 

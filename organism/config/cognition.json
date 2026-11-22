@@ -1,0 +1,48 @@
+{
+  "schema_version": "0.1.0",
+  "seed_thread": {
+    "key": "continuity-under-budget",
+    "name": "Does continuity improve our seeing?",
+    "owner": "tela",
+    "aim": "A proposal from the reviewed code contribution: investigate whether preserving questions, recalling evidence, and revising interpretations produces useful continuity at a tolerable measured cost. Rest or end this thread if it does not help.",
+    "horizon": "After enough observations, cite one useful correction or explicitly say none occurred, preserve one unresolved uncertainty, and report estimated spending and journal growth. Do not infer benefit merely from activity or agreement."
+  },
+  "metrics": {
+    "body.ram_pct": {
+      "source": "Organism Metabolism", "script": "fetch-metabolism.sh", "unit": "percent",
+      "value_path": ["measurement", "body", "ram_pct"],
+      "quality_path": ["measurement", "body", "metric_states", "ram_pct"],
+      "time_path": ["measurement", "sampled_at"], "min": 0, "max": 100, "max_age_seconds": 7200
+    },
+    "body.disk_pct": {
+      "source": "Organism Metabolism", "script": "fetch-metabolism.sh", "unit": "percent",
+      "value_path": ["measurement", "body", "disk_pct"],
+      "quality_path": ["measurement", "body", "metric_states", "disk_pct"],
+      "time_path": ["measurement", "sampled_at"], "min": 0, "max": 100, "max_age_seconds": 7200
+    },
+    "economic.spent_usd_today": {
+      "source": "Organism Metabolism", "script": "fetch-metabolism.sh", "author": "tela", "unit": "Tela estimated USD today",
+      "value_path": ["measurement", "economic", "spent_usd_today"],
+      "quality_path": ["measurement", "economic", "metric_states", "spent_usd_today"],
+      "time_path": ["measurement", "sampled_at"], "min": 0, "max": 100, "max_age_seconds": 7200
+    },
+    "economic.requests_today": {
+      "source": "Organism Metabolism", "script": "fetch-metabolism.sh", "author": "tela", "unit": "Tela counted responses today",
+      "value_path": ["measurement", "economic", "requests_today"],
+      "quality_path": ["measurement", "economic", "metric_states", "requests_today"],
+      "time_path": ["measurement", "sampled_at"], "min": 0, "max": 10000, "max_age_seconds": 7200
+    },
+    "growth.journal_kb": {
+      "source": "Organism Metabolism", "script": "fetch-metabolism.sh", "unit": "KiB",
+      "value_path": ["measurement", "growth", "journal_kb"],
+      "quality_path": ["measurement", "growth", "metric_states", "journal_kb"],
+      "time_path": ["measurement", "sampled_at"], "min": 0, "max": 104857600, "max_age_seconds": 7200
+    },
+    "membrane.failed_ssh_24h": {
+      "source": "Organism Metabolism", "script": "fetch-metabolism.sh", "unit": "readable failure messages in 24h",
+      "value_path": ["measurement", "membrane", "failed_ssh_24h"],
+      "quality_path": ["measurement", "membrane", "metric_states", "failed_ssh_24h"],
+      "time_path": ["measurement", "sampled_at"], "min": 0, "max": 5000, "max_age_seconds": 7200
+    }
+  }
+}

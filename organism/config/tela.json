@@ -10,11 +10,21 @@
   "input_cost_per_mtok": 0.8,
   "output_cost_per_mtok": 4.0,
   "cadence": "hourly",
+  "inquiry_enabled": true,
+  "cognition_enabled": true,
   "core_docs": [
     "quadrumvirate/charter.md",
-    "care/lingua-gaiana.md"
+    "care/lingua-gaiana.md",
+    "organism/experiments/continuity-under-budget.md"
   ],
   "data_sources": [
+    {
+      "name": "Organism Metabolism",
+      "script": "fetch-metabolism.sh",
+      "format": "json",
+      "epistemic_tag": "DERIVED",
+      "description": "Read-only body, estimated spend, storage, and aggregate SSH journal measurements"
+    },
     {
       "name": "SMHI Stockholm Weather",
       "script": "fetch-weather.sh",

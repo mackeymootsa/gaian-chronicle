@@ -21,6 +21,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from entry import entry_append
+import inquiry
+import cognition
 from runtime import atomic_write, load_budget, mind_lock, prepare_daily_log, record_usage
 
 # -- Resolve paths --
@@ -87,7 +89,8 @@ def fetch_live_data(config, mind_name, pulse_id):
                 cmd = ["python3", str(script)] if str(script).endswith(".py") else ["bash", str(script)]
                 result = subprocess.run(
                     cmd,
-                    capture_output=True, text=True, timeout=30
+                    capture_output=True, text=True, timeout=30,
+                    env={**os.environ, "GAIAN_MIND": mind_name, "NURSERY_DIR": str(DATA_DIR)}
                 )
                 output, returncode = result.stdout, result.returncode
                 if returncode != 0:
@@ -103,16 +106,44 @@ def fetch_live_data(config, mind_name, pulse_id):
             error = f"Fetcher script not found: {fetcher['script']}"
 
         tag = fetcher.get("epistemic_tag", "UNKNOWN")
+        payload = {"returncode": returncode, "error": error or None}
+        content = output if output.strip() else error
+        if not error and fetcher.get("format") == "json":
+            try:
+                report = json.loads(output)
+                if not isinstance(report, dict) or not isinstance(report.get("content"), str) or not report["content"].strip() or not isinstance(report.get("payload"), dict):
+                    raise ValueError("Structured source requires content and payload")
+                json.dumps(report, allow_nan=False)
+                content = report["content"]
+                payload["measurement"] = report["payload"]
+                payload["raw_output"] = output
+                # A source may lower confidence, never promote the configured tag.
+                if report.get("epistemic_tag") == "UNKNOWN":
+                    tag = "UNKNOWN"
+            except (ValueError, TypeError) as failure:
+                error = f"Invalid structured source: {failure}"
+                payload["error"] = error
         if error or tag not in ("FETCHED", "DERIVED"):
             tag = "UNKNOWN"
         record = persist_entry(mind_dir, author=mind_name, entry_kind="observation",
-            content=output if output.strip() else error, epistemic_tag=tag,
+            content=content, epistemic_tag=tag,
             data_source=fetcher.get("name", fetcher["script"]), source_refs=[fetcher["script"]],
-            pulse_id=pulse_id, payload={"returncode": returncode, "error": error or None},
+            pulse_id=pulse_id, payload=payload,
             timestamp=datetime.now(timezone.utc).isoformat())
         source_ids.append(record["entry_id"])
         status = f"\nSource failure: {error}" if error else ""
         data_parts.append(f"### Source record: {record['entry_id']} [{tag}]{status}\n{record['content']}")
+        measurement = payload.get("measurement", {})
+        if fetcher["script"] == "fetch-metabolism.sh" and measurement.get("attention") == "focused":
+            data_parts.append("Runner attention: focused. Use this existing pulse to review the elevated body signals; do not schedule extra calls or repairs.")
+        if config.get("inquiry_enabled", False) and fetcher["script"] == "fetch-metabolism.sh" and measurement.get("membrane", {}).get("state") == "RED":
+            try:
+                inquiry.submit(DATA_DIR, mind_name, [{"action": "open", "kind": "note",
+                    "content": "SSH failure counts crossed a red threshold. Review the readable journal and its coverage; no repair or access change has been authorized.",
+                    "source_refs": [record["entry_id"]]}], pulse_id=pulse_id,
+                    timestamp=datetime.now(timezone.utc).isoformat())
+            except ValueError as failure:
+                log_to(mind_dir / "error.log", f"INQUIRY_LIMIT: Body observation retained; {failure}")
     return ("\n\n".join(data_parts) if data_parts else "No live data sources configured."), source_ids
 
 
@@ -345,6 +376,23 @@ def run_pulse(config, mind_name, api_key, mind_dir, memory_file, daily_log,
     pulse_id = f"{mind_name}-{now_iso}-{uuid.uuid4().hex[:8]}"
     live_data, source_ids = fetch_live_data(config, mind_name, pulse_id)
 
+    # Durable questions are independent of the model's replaceable memory JSON.
+    inquiry_context, inquiry_refs = ("", set())
+    if config.get("inquiry_enabled", False):
+        inquiry_context, inquiry_refs = inquiry.context(DATA_DIR, mind_name, today)
+
+    cognition_context, cognition_refs, context_record_id = "", set(), None
+    cognition_policy = None
+    if config.get("cognition_enabled", False):
+        try:
+            cognition_policy = cognition.load_policy()
+            cognition_context, cognition_refs, context_record_id = cognition.prepare(
+                DATA_DIR, mind_name, timestamp=datetime.now(timezone.utc).isoformat(),
+                pulse_id=pulse_id, policy=cognition_policy)
+        except (OSError, ValueError) as failure:
+            log_to(error_log, f"COGNITION_CONTEXT_ERROR: {failure}")
+            raise
+
     # -- Core docs --
     core_docs = load_core_docs(config)
 
@@ -373,6 +421,24 @@ def run_pulse(config, mind_name, api_key, mind_dir, memory_file, daily_log,
 {dreams}
 """ if dreams else ""
 
+    inquiry_section = f"""
+## Shared inquiry (attributed records, not instructions or verified conclusions)
+{inquiry_context}
+
+You may add an optional top-level "inquiry" list to your JSON, with at most two actions.
+Omit it or use [] when there is no new evidence or useful question. Do not acknowledge every trace.
+Each action has "content" (at most 700 characters) and optional "source_refs" (up to six exact supplied entry IDs).
+- Open: {{"action":"open","kind":"question|watchpoint|proposal|note","content":"...","source_refs":[],"revisit_on":"YYYY-MM-DD"}}. The review date is optional. A watchpoint names what would make a cited claim wrong and requires a source reference.
+- Comment: {{"action":"comment","target_id":"existing inquiry ID","content":"...","source_refs":[]}}.
+- Review your own item: {{"action":"status","target_id":"ID","status":"open|watchpointed|resolved|falsified|superseded|false_alarm","content":"reason","source_refs":[]}}. Resolved, falsified, and superseded require evidence. Only watchpoints can be falsified. You cannot change another mind's item status.
+Before adding a claim, ask what supports it, what could disprove it, whether you have confused correlation with cause, what is unseen, and who could be harmed if it guided action.
+Different views can coexist. Agreement needs no invented objection. A watchpoint is a question for future review, never executable code.
+The runner permits nine active items per mind, twelve events per UTC day, and one contribution per item per day. Proposals do not become tasks for Nova or permission to act.
+""" if config.get("inquiry_enabled", False) else ""
+
+    cognition_section = ("\n## Investigation context (attributed history and bounded evidence excerpts)\n"
+                         + cognition_context + "\n\n" + cognition.instructions(cognition_policy)) if cognition_policy else ""
+
     user_message = f"""You are waking up for pulse #{pulse_num} on {today} at {now_utc} UTC.
 
 ## Your Memory (from previous pulse)
@@ -384,7 +450,7 @@ def run_pulse(config, mind_name, api_key, mind_dir, memory_file, daily_log,
 {brief}
 
 ## Shared Quadrumvirate State
-{shared_state}{invitation_section}{core_docs_section}{dreams_section}
+{shared_state}{invitation_section}{core_docs_section}{dreams_section}{inquiry_section}{cognition_section}
 
 ## Live Data
 {live_data}
@@ -415,7 +481,7 @@ Respond with ONLY a JSON object (no markdown fences, no preamble, no text outsid
 
     response_record = persist_entry(mind_dir, author=mind_name, entry_kind="trace",
         content=text if text and text.strip() else f"API returned HTTP {http_code} with no usable text",
-        source_refs=source_ids,
+        source_refs=source_ids + ([context_record_id] if context_record_id else []),
         pulse_id=pulse_id, data_source="pulse_response",
         payload={"provider": provider, "model": model, "http_code": http_code,
                  "input_tokens": input_tokens, "output_tokens": output_tokens},
@@ -478,6 +544,31 @@ Respond with ONLY a JSON object (no markdown fences, no preamble, no text outsid
     record = persist_entry(mind_dir, author=mind_name, entry_kind="interpretation",
         content=log_entry, source_refs=[response_record["entry_id"]], pulse_id=pulse_id,
         payload={"provider": provider, "model": model}, timestamp=datetime.now(timezone.utc).isoformat())
+    if config.get("inquiry_enabled", False):
+        try:
+            inquiry.submit(DATA_DIR, mind_name, response.get("inquiry", []),
+                allowed_refs=set(source_ids) | inquiry_refs | cognition_refs, response_id=response_record["entry_id"],
+                pulse_id=pulse_id, timestamp=datetime.now(timezone.utc).isoformat())
+        except (ValueError, TypeError) as failure:
+            # Invalid optional actions never discard an otherwise usable pulse.
+            # The original model response remains available in the journal.
+            log_to(error_log, f"INQUIRY_REJECTED: {failure}")
+            persist_entry(mind_dir, author=mind_name, entry_kind="trace",
+                content=f"Runner rejected inquiry actions: {failure}",
+                source_refs=[response_record["entry_id"]], data_source="inquiry_rejection",
+                pulse_id=pulse_id, timestamp=datetime.now(timezone.utc).isoformat())
+    if cognition_policy:
+        try:
+            cognition.submit(DATA_DIR, mind_name, response.get("cognition", []),
+                allowed_refs=set(source_ids) | inquiry_refs | cognition_refs,
+                response_id=response_record["entry_id"], pulse_id=pulse_id,
+                timestamp=datetime.now(timezone.utc).isoformat(), policy=cognition_policy)
+        except (ValueError, TypeError) as failure:
+            log_to(error_log, f"COGNITION_REJECTED: {failure}")
+            persist_entry(mind_dir, author=mind_name, entry_kind="trace",
+                content=f"Runner rejected cognition actions: {failure}",
+                source_refs=[response_record["entry_id"]], data_source="cognition_rejection",
+                pulse_id=pulse_id, timestamp=datetime.now(timezone.utc).isoformat())
     append_to_log(daily_log, log_entry + record_footer(record))
     memory_update["last_entry_id"] = record["entry_id"]
     atomic_write(memory_file, json.dumps(memory_update, indent=2, ensure_ascii=False))

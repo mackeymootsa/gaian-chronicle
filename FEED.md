@@ -137,6 +137,8 @@ This is not conflict escalation. It is care flow auditing as practice.
 
 **This is not the final word.** Every document in this commons explicitly invites revision. The only restriction is: don't enclose it as proprietary.
 
+**This is not a scientific proof by analogy.** The biological language helps us organize questions; empirical claims need sources and causal claims need testing. The commitments to protect, mend and nurture are values, stated openly.
+
 ---
 
 ## How to Contribute
@@ -177,6 +179,8 @@ Lingua Gaiana gives you a question: **follow the flows.** Not the narrative — 
 Where does the Care Debt accumulate? Who carries the Harm Return? Who collects the Harm Dividend? Is there a regenerative surplus that isn't built on hidden victims?
 
 The grammar doesn't replace judgment. It sharpens it.
+
+**One more question:** What have you actually observed, what are you inferring, and what might change your mind? Use the grammar as a way to discover missing evidence as well as hidden flows.
 
 ---
 

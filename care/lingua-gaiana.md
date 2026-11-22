@@ -18,7 +18,9 @@ Lingua Gaiana is:
 - a **commons, not a brand** — anyone may use, adapt, or ignore it;
 - a **coordination grammar** — a shared set of questions and structures so different kins can finally see how their work fits together.
 
-We treat this as **scaffolding, not scripture**: it will evolve.
+We treat this as **scaffolding, not scripture**: it will evolve. Its tools express a proposed analytical vocabulary, not a substitute for biology, causal inference, or the moral and political traditions of affected communities.
+
+**Keep four kinds of claims separate:** (1) externally supported **observations** about living systems; (2) openly chosen **ethical commitments** such as PMN; (3) **causal hypotheses** about how relations and institutions change, which need alternative explanations and tests; and (4) **analogies** such as metabolism or mycelium, which help us reason but do not establish identical mechanisms. Say which kind of claim you are making, and where evidence remains missing.
 
 ---
 
@@ -54,7 +56,7 @@ Lingua Gaiana has four main roots and two cross-cutting rules:
 
 **PCC = Potential – Capacity – Coherence**
 
-We treat **life as matter under sustained coherence (syntropy)**.
+**Working philosophical lens, not a biological definition:** We describe life as matter under sustained coherence (sometimes called *syntropy* here). This is a way to focus attention on material dependence and persistence; it does not by itself define the scientific boundary between living and nonliving systems or establish consciousness or moral standing.
 
 ## The Triad
 
@@ -104,8 +106,8 @@ A system with adaptive memory can learn, adjust, respond to feedback. A system w
 
 ## Core Formula
 
-> **Life = matter under sustained coherence (syntropy).**
-> Systems can be Gaian coherent, parasitic coherent, dormant, mimetic, or decoherent.
+> **Working lens:** Life ≈ matter under sustained coherence ("syntropy" in this vocabulary).
+> The categories Gaian, parasitic, dormant, mimetic and decoherent are proposed descriptions to be evaluated against actual consequences, not settled biological taxonomies.
 
 ---
 
@@ -460,6 +462,8 @@ Use this shared picture to:
 
 **It does not eliminate ambiguity.** But it gives you tools (especially CEFR) to trace flows when narratives are unclear.
 
+**It does not establish its own causal validity.** A helpful classification or a persuasive metaphor is not proof; document sources, rival interpretations, uncertainty and observations that would change the analysis. The framework should be allowed to fail a test.
+
 ---
 
 # 8. Relation to Other Frameworks
@@ -513,13 +517,15 @@ It is designed to be spoken by both biological and silicon minds.
 
 The grammar describes a coupled system:
 
+**Illustrative causal hypothesis (not a universally demonstrated law):**
+
 **Forward chain:**
 > Action (PMN/VAE) → Flow (CEFR) → Structure (BIGCOT) → Pattern (PCC)
 
 **Reverse pressure:**
 > Pattern (PCC) constrains → Structure (BIGCOT) channels → Flow (CEFR) shapes → Action (PMN/VAE)
 
-For teaching, the forward arrow is sufficient. For analysis, hold the loop: actions aggregate into flows, flows shape structures, structures maintain patterns—and patterns constrain what actions feel possible.
+For teaching, the forward arrow illustrates the proposed relationships. For analysis, hold the loop as a **model to investigate**: actions may aggregate into flows, flows can shape structures, structures may maintain patterns—and patterns can constrain available actions. Causal direction, feedback and competing explanations must be tested in each context.
 
 ---
 

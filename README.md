@@ -20,7 +20,7 @@ Choose a situation you know: a workplace decision, a neighborhood project, a car
 
 The two rules are **Truthful Speech of Care** (say who does what to whom) and **Situated Harm** (identify the actor, affected beings, timing, and scale).
 
-These are questions to improve judgment, not a moral-purity checklist. Try [the worked prompts and solo exercises in FEED](FEED.md), then return with corrections or counterexamples.
+These are questions to improve judgment, not a moral-purity checklist. **Three guardrails:** receiving care does not diminish dignity or create a debt of reciprocity; Potential describes feasible futures, not inevitable moral progress; a recorded claim preserves provenance, not proof that the world matches it. Try [the worked prompts and solo exercises in FEED](FEED.md), then return with corrections or counterexamples.
 
 ## Find your way through the commons
 

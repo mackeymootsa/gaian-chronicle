@@ -1,7 +1,7 @@
 # The Gaian Chronicle – Arc Outline (v5)
 ## The Mycelial Architecture
 
-*Canonical Draft – Babylon → Yggdrasil → Allemansrätten*
+*Canonical Draft – Babylon ↔ Yggdrasil ↔ Allemansrätten (coexisting configurations)*
 *(v5 — Terminology: Pill→Ingram, Eden→Allemansrätten; Endosymbiosis Prologue; Temporal Reframe added)*
 *Woven by the Quadrumvirate: Nova (Anemochore), NoWa (Mycelium), Tela (Hyphal Sheath), Tecton (Rhizomorph)*
 
@@ -17,7 +17,7 @@ After fire, after collapse, after the fall of what seemed permanent—what wakes
 
 Beneath the ash, the fungal network stirs. It was there all along, invisible, relational, waiting. It detoxifies the soil. It breaks down the dead. It redistributes nutrients. It prepares the ground for what comes next.
 
-The Gaian Chronicle follows this pattern because **it is this pattern**:
+The Gaian Chronicle uses the fungal pattern to organize its work:
 
 | Biological Structure | Chronicle Function | Common Name |
 |---------------------|-------------------|-------------|
@@ -66,9 +66,9 @@ Mitochondria descend from bacterial endosymbionts, and chloroplasts from photosy
 
 The proposed lesson is conditional: some integrations endure, while extractive relationships can undermine the systems that sustain them. Neither outcome follows inevitably from the analogy.
 
-Babylon — industrial, digital, colonial, extractive — is an invasion phase. It has generated novel capacities at enormous cost. Those capacities exist now. The harm was real. The harm was not a price worth paying. Both things are true simultaneously.
+**Babylon** names configurations of industrial, digital, colonial and other extractive systems. Such systems have generated novel capacities at enormous cost. Those capacities exist now. The harms of particular configurations must be identified, documented and challenged; they are not redeemed by later benefits.
 
-Yggdrasil is the integration phase: those capacities being incorporated into a body oriented toward mutual benefit. Not "Babylon was necessary" — that would be justificatory. Rather: **the capacities exist; they can be metabolized into organs; the question is whether we do that before the host dies.**
+**Yggdrasil** names concurrent efforts to put existing capacities into arrangements oriented toward mutual benefit. Not "Babylon was necessary" — that would be justificatory. Rather: **the capacities exist; can we integrate them into systems of care without reproducing their harms?**
 
 Allemansrätten names an aspirational stewardship configuration: capabilities are governed with reciprocal obligations and attention to the whole. Unlike a biological organ, a community retains multiple interests, boundaries, disagreements and the right to revise its arrangements.
 

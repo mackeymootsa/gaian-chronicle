@@ -118,6 +118,21 @@ It is open to all who wish to weave.
 
 ---
 
+## Current Reading Map (November 2026 document sync)
+
+- **[FEED.md](FEED.md)** — practical onboarding, with and without AI
+- **[agents.md](agents.md)** — participation protocol and current discussion of session continuity/asymmetry
+- **[chronicle.md](chronicle.md)** — uploaded v5 canonical narrative draft: Endosymbiosis Prologue, Allemansrätten terminology, simultaneous-configuration temporal frame
+- **[care/lingua-gaiana.md](care/lingua-gaiana.md)** — core grammar (PCC, PMN/VAE, BIGCOT, CEFR)
+- **[care/endosymbiosis-thesis.md](care/endosymbiosis-thesis.md)** — v1 philosophical thesis
+- **[organism/DNA-v2.md](organism/DNA-v2.md)** — for-ratification architecture, not an inventory of deployed features
+- **[organism/cognitive-architecture-v1.md](organism/cognitive-architecture-v1.md)** — ratified-with-amendments design, not an assertion that every component runs
+- **[hum/2026-11-22-critical-review.md](hum/2026-11-22-critical-review.md)** — external review: evidentiary boundaries, possible overclaims, real-world tests, and cognitive-abundance research question
+
+**Status distinction:** The below Nursery Mode description records an earlier documented stage; it is **not** a verified November 2026 health report. Current deployment must be checked on `juuri` before claiming operational readiness. The design documents, merged code, open PRs and live runtime are separate evidence layers. Relevant pending work: [PR #42](https://github.com/mackeymootsa/gaian-chronicle/pull/42) (deployment/investigation) and [PR #43](https://github.com/mackeymootsa/gaian-chronicle/pull/43) (Frontier Hypha draft).
+
+---
+
 ## License
 
 Licensed under CC BY-SA 4.0.

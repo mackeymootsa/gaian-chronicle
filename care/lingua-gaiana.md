@@ -433,7 +433,7 @@ Lingua Gaiana is:
 - Is the system sensing reality or suppressing feedback?
 
 ### Step 3: CEFR
-- **CEC:** Who depends / who contributes / who drains?
+- **CEC:** Who needs care / who provides it / who controls or diverts its provision?
 - **CF/HD:** Who does what to whom (PMN or VAE)? Where does the dividend go?
 - **CR/HR:** Who gets Care Return? Who absorbs Harm Return?
 - **CD:** What Care Debt has accumulated?

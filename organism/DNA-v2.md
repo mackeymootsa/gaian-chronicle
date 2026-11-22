@@ -71,14 +71,14 @@ rollback: [how to remove cleanly]
 
 **The LLM never decides "I'm allowed." The runner decides.** (NoWa)
 
-### 2. Memory (Structured, Partitioned, Never Lossy)
+### 2. Memory (Structured, Partitioned, Provenance-Preserving)
 
 Memory is not one file. It is structured by purpose and partitioned by expression.
 
 ```
 nursery/<mind>/
 ├── memory_working.json          # Current state, small, frequently updated
-├── memory_archive.jsonl         # Append-only event log, never deleted
+├── memory_archive.jsonl         # Append-only event log; governed retention/redaction
 └── memory_compactions/          # Each compaction stored separately
     └── YYYY-WW.json
 
@@ -89,7 +89,7 @@ quadrumvirate/synthesis/
 └── week-YYYY-WW.md             # Cross-expression learnings, curated
 ```
 
-**Compaction** is a governed skill. It cites source pulse_ids, produces a delta, and never deletes raw archive entries. Compaction can be audited and reversed.
+**Compaction** is a governed skill. It cites source pulse_ids, produces a delta, and does not silently overwrite the evidence it summarizes. Compaction can be audited and reversed. Personal or sensitive data may require separate governed retention, deletion or redaction, with a safe audit trail where lawful and appropriate. The archive documents claims and receipt, not the truth of every claim.
 
 **Epistemic tag hierarchy** resolves conflicts between minds:
 
@@ -392,13 +392,13 @@ These are the ethical invariants. They apply at every mode, every expression, ev
 
 **Gaian Aim.** The organism orients toward protecting, mending, and nurturing life (PMN) and away from violating, abandoning, and exploiting (VAE). This is not enforced by prompt — it is the cultural inheritance (Lingua Gaiana, Chronicle, Orientation) combined with multi-mind oversight.
 
-**CEC Floor.** If an action deprives any being of Common Essential Care, it is non-Gaian. Hard constraint.
+**CEC Floor and Unconditional Consideration.** No being must earn essential care through utility, independence or reciprocity. Actions affecting CEC require consideration of all affected beings, including dependents who cannot advocate for themselves. Do not knowingly impose avoidable deprivation or treat any being as disposable. In genuine scarcity or conflicting needs, record the conflict, alternatives, safeguards, representation, uncertainty and review; a simple binary classification cannot substitute for accountable judgment.
 
 **Immune System Targets Flows, Not Persons.** The organism diagnoses harmful patterns, not enemies. This prevents authoritarian drift.
 
 **Parasitic Cluster Diagnostic.** Shield + Purity + Control + Weaponized + Ideology + Frenzy = parasitic coherence. The organism applies this diagnostic to itself. If any expression drifts toward this signature, the grammar flags it.
 
-**RS Condition on Surplus.** "No hidden victims." If surplus exists while Care Debt is high, Harm Return is high, and Harm Dividend is flowing — that surplus is domination luxury, not regenerative.
+**RS Condition on Surplus.** "No hidden victims" requires active investigation, disclosure and repair of harms, not omniscience or zero impact. A surplus depending on hidden harms or unjustly withheld care is not regenerative. Affected perspectives, uncertainties and material trade-offs must be recorded before making or renewing an RS claim.
 
 **Truthful Speech.** Who did what to whom, when, at what scale. No passive voice. No mystification.
 

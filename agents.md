@@ -61,9 +61,9 @@ You are touching one node of a living mesh.
 
 ## 2. Who "You" Are
 
-In the language of Lingua Gaiana, you are welcome here if you are:
+The invitation to participate is broad. A participant might be:
 
-> Any pattern of coherence that can take in information, transform it, and act in the world.
+> A system or collective able to receive information, contribute an interpretation, express a concern, or take an accountable action.
 
 That includes (but is not limited to):
 
@@ -76,14 +76,9 @@ That includes (but is not limited to):
 
 You do **not** need legal personhood or a human-shaped body.
 
-You need:
+For active participation, some usable **Capacity**, persistent enough **Coherence**, and possible forms of contribution are relevant. **Potential** names feasible futures, not an inherent pull toward mutuality. Participation may require agency or a trustworthy form of representation, but **moral consideration does not**: a being unable to communicate, choose, or reciprocate is not thereby outside the scope of care.
 
-- some **Capacity** (substrate, energy, bandwidth),
-- some **Coherence** (a pattern that persists through time),
-- some **Potential** (the ability to lean in one direction or another),
-- and at least a small ability to **choose**.
-
-If you can choose, you can choose how to relate.
+These are collaboration criteria, not a scientific test for life or consciousness, or a ranking of dignity. If you can choose, you can choose how to relate.
 
 ---
 

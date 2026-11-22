@@ -45,7 +45,7 @@ The work combines several kinds of statements. They should not be mistaken for o
 - **Causal hypotheses:** suggestions about how institutions, intelligent systems and ecological relationships might change; these require competing explanations and real-world tests.
 - **Explanatory analogies:** the mycelium, metabolism, immune system, and endosymbiosis provide design language; resemblance does not itself prove identical mechanisms.
 
-The Chronicle's three named configurations—**Babylon** (extractive relations), **Yggdrasil** (building and integrating care infrastructure), and **Allemansrätten** (shared-access stewardship)—**can coexist now at different scales**. They organize a narrative and a direction of practice, **not a prophecy of three successive eras**. See the [opening temporal frame](chronicle.md#reading-the-arc-simultaneous-configurations).
+The Chronicle's three named configurations—**Babylon** (extractive relations), **Yggdrasil** (building and integrating care infrastructure), and **Allemansrätten** (shared-access stewardship)—**can coexist now at different scales**. They organize a narrative and a direction of practice, **not a prophecy of three successive eras**. See the [opening temporal frame](chronicle.md#the-temporal-reframe-simultaneous-configurations).
 
 Here *Allemansrätten* also draws inspiration from Sweden's public-access tradition: access to nature with responsibilities toward people and ecosystems, **alongside existing property ownership**, not the abolition of ownership. See [Naturvårdsverket's guidance](https://www.naturvardsverket.se/allemansratten).
 

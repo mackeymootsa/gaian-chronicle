@@ -38,7 +38,7 @@ Every non-trivial claim must include:
 - **Method** (how was this obtained or calculated?)
 - **Uncertainty / quality flag** (SMHI quality codes, "estimated", "unknown")
 
-**This taxonomy is the organism's immune system. It does not drift. It does not soften.**
+**This taxonomy protects provenance and epistemic distinctions.** It must not be silently weakened, but it can be openly corrected when evidence or governance reveals shortcomings. A VERIFIED assessment is bounded by its method, not beyond revision.
 
 ## Place Privacy (non-negotiable)
 
@@ -58,7 +58,7 @@ Two files, strictly separated:
 ### `understory/index.jsonl` — Canonical Record
 - One JSON object per line, append-only
 - Machine-readable, queryable, survives cron failures and retries
-- This is the source of truth
+- This is the canonical record of received observations and claims, **not** proof that the external world matches every entry; erroneous claims are corrected through linked later entries
 
 Schema per entry:
 ```json

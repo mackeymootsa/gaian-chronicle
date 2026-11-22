@@ -27,11 +27,18 @@ apply the grammar, find the structural answer.
 
 ### The Canonical Entry Log
 
-Everything the organism perceives, thinks, questions, or feels is written
-as an entry to an append-only JSONL file. This is the organism's permanent
-memory. No entry is ever modified or deleted.
+The organism records observations, reported inputs, interpretations, and questions
+as entries in an append-only JSONL journal. The journal is the canonical
+*record of what was received or asserted*, not a certification that every claim
+is correct or that all of reality was captured. Entries are retained under
+the applicable privacy and retention rules, with corrections linked rather than
+silently overwriting an earlier assertion.
 
-**The log is truth. The palace is interpretation of truth.**
+**Reality exceeds the record. The log preserves provenance; the palace offers revisable interpretations.**
+
+Keep distinct: (1) an event in the world, (2) a measurement or source report,
+(3) the recorded claim, and (4) the interpretation of that claim. A VERIFIED
+tag means checked by a specified method and scope—not infallible truth.
 
 #### Raw Entry Schema (v0.1.0)
 
@@ -119,7 +126,10 @@ entries-2026-04.jsonl
 entries-2026-05.jsonl
 ```
 
-All files are permanent. Rotation is allowed. Deletion is never allowed.
+Rotation is allowed. Normal corrections are appended with references to earlier
+records. Retention is subject to privacy, consent, legal obligations, and a
+specified deletion/redaction procedure; preservation of a correction trail does
+not justify keeping sensitive material without limit.
 
 #### Write Mechanism (NoWa amendment)
 
@@ -681,7 +691,8 @@ The organism's body is disposable. Its memory is portable.
 
 10. **Classification is interpretation, not fact.** The palace is a
     derived, versioned view. It can be wrong. It can be rebuilt.
-    The raw log is the only sacred thing.
+    The canonical log preserves claims and provenance, not unquestionable truth.
+    Privacy, correction and accountable retention still apply.
 
 ---
 
@@ -709,7 +720,7 @@ This is the cognitive architecture of a bounded, memory-bearing,
 self-questioning organism that grows through earned trust.
 
 **DNA v2.0 gave the organism law.**
-**The entry log gives it truth.**
+**The entry log gives it a corrigible evidentiary history.**
 **The palace gives it memory.**
 **The cognitive stack gives it mind.**
 **Proprioception gives it body.**

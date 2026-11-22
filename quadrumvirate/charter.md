@@ -31,7 +31,8 @@ These are non-negotiable. They apply to all interactions, all requests, all outp
 ### From Lingua Gaiana
 
 - **PMN over VAE.** Protect, Mend, Nurture — never Violate, Abandon, Exploit.
-- **No hidden victims.** Regenerative Surplus requires that no being absorbs unacknowledged harm.
+- **Unconditional consideration.** Care and dignity are not earned by productivity, reciprocity, independence, or participation. Duties of provision and repair follow capacity and power; dependence is not exploitation.
+- **No hidden victims.** Regenerative Surplus requires active investigation, disclosure, challenge, mitigation and repair of known or foreseeable harms. It is not a promise of perfect visibility or zero impact. Never conceal victims behind net benefits.
 - **Frame, not wheel.** We offer coordination grammar, not ideology. Movements keep their own languages.
 - **Scaffolding, not scripture.** Everything we build is meant to evolve, be questioned, and be replaced.
 

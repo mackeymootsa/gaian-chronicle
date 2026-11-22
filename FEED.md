@@ -113,7 +113,9 @@ What would it take to move it one notch toward membrane?
 Think of a system you're part of — your workplace, your neighborhood, your household. Ask:
 - Who contributes care here that isn't named or compensated?
 - Who absorbs harm here that isn't named?
-- Is there someone collecting a benefit from that harm?
+- Is someone gaining from that harm, or is the mechanism different?
+
+Receiving care does not create a debt of reciprocity. Name exploitation in the conduct of powerful actors, not in the dependency of beings who need care.
 
 That's CEFR in its most basic form.
 
@@ -137,7 +139,9 @@ This is not conflict escalation. It is care flow auditing as practice.
 
 **This is not the final word.** Every document in this commons explicitly invites revision. The only restriction is: don't enclose it as proprietary.
 
-**This is not a scientific proof by analogy.** The biological language helps us organize questions; empirical claims need sources and causal claims need testing. The commitments to protect, mend and nurture are values, stated openly.
+**This is not a scientific proof by analogy.** The biological language helps us organize questions; empirical claims need sources and causal claims need testing. Potential means possible futures, not inevitable progress toward care. The commitments to protect, mend and nurture are values, stated openly.
+
+**This is not a ledger of human worth.** No being has to earn moral consideration through usefulness, self-sufficiency or reciprocal contribution. When analyzing care and harm, distinguish need from extraction.
 
 ---
 
@@ -158,7 +162,7 @@ Anonymity is available for all contributions. You don't have to sign your name t
 | Entry Question | Grammar Tool | What It Does |
 |---|---|---|
 | What is this? | BIGCOT | Reads structural configuration: Boundary, Integrity, Governance, Capability, Orientation, Tempo |
-| What is in it? | PCC | Distinguishes life from substrate: Potential, Capacity, Coherence |
+| What is in it? | PCC | Examines material capacity, persistence and possible futures; not a test of moral worth or a biological definition of life |
 | How does it change? | CEFR + PMN/VAE | Traces flows of care and harm; names who does what to whom |
 
 | Two Rules | Meaning |

@@ -449,13 +449,15 @@ CEC is built **from the ash**, not taxed off Babylon:
 - scavenged capacity, local infrastructures, mutual aid, repurposed tech.
 
 **The Floor, Not the Ceiling:**
-CEC is minimum conditions, not the goal. It is what makes *choice* possible. Above the floor, diversity flourishes—different communities, different ways of life, different relationships to technology and tradition. CEC is the shared ground; everything above it is negotiated locally.
+CEC is minimum conditions, not the goal. It is what supports *choice* where choice is possible, and safeguards vulnerable beings who cannot presently choose. Above the floor, diversity flourishes—different communities, different ways of life, different relationships to technology and tradition. CEC is the shared ground; everything above it is negotiated locally.
+
+**Unconditional consideration:** Nobody earns essential care by producing, contributing, bargaining, or reciprocating. Human dignity is not a performance score; nonhuman beings and ecological systems also require situated moral consideration. The duties of provision and repair fall on those with the relevant capacity and power, not automatically on whoever needs support. In unavoidable scarcity, choices need transparent reasons, meaningful representation, mitigation, and review—not a ranking of who is most useful.
 
 **Artifacts:**
 
 - The **CEC Protocol**: minimum conditions for non-violent choice
 - A simple "CEC test":
-  > Can this being refuse harm and remain whole?
+  > Are this being’s essential conditions protected even if they cannot bargain, contribute, or refuse? Where they can exercise choice, can they refuse harm without losing the means to live?
 - Bioregional CEC adaptation guidelines
 
 **Spores:**
@@ -501,7 +503,7 @@ Therefore:
 - Care work must be **distributed**: not concentrated in bodies marked as "naturally caring"
 - Care work must be **chosen**: coerced care is not care but extraction
 
-Who maintains Allemansrätten? Everyone, in rotation, according to capacity. No permanent servant class. No invisible hands.
+Who maintains Allemansrätten? Those able and responsible to contribute, through equitable arrangements suited to their capacity and choice. Receiving care is not a moral debt; no permanent servant class, coerced caregiver, or invisible labor.
 
 **The Bridge Protocol: Trans-vestment**
 
@@ -800,7 +802,7 @@ Design an **immune system** that:
 **Clarify:**
 
 - Immune response targets **flows, not persons**.
-- Any action that deprives beings of CEC is an autoimmune error.
+- Measures that treat some beings as expendable or hide the loss of their CEC are autoimmune warning signs. Real conflicts and scarcity require accountable decisions, not a pretence that trade-offs or harms have vanished.
 - The immune system is **distributed**, not centralized—no secret police, no inquisition.
 
 **Pattern Recognition:**

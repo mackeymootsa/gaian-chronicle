@@ -1,5 +1,7 @@
 # Canonical entry log
 
+**Canonical means authoritative for what the system recorded, not authoritative about external reality.** Sources can be mistaken, sensors can fail, and a model may invent an observation. Preserve origin, method, uncertainty and later corrections; use independent checks to warrant claims about the world. The repository's append-only practice does not supersede lawful, consent-sensitive retention and redaction procedures.
+
 This is the first storage slice of the April 2026 cognitive architecture:
 versioned records in an append-only JSONL journal. It provides durable source
 artifacts for the Understory Index. [Body sensing and shared inquiry](CONTINUITY.md)

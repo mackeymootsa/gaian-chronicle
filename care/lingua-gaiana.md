@@ -64,14 +64,16 @@ Lingua Gaiana has four main roots and two cross-cutting rules:
 |-----------|------------|
 | **Capacity** | The material substrate and constraints: bodies, land, infrastructure, hardware, biochemistry, energy, relations. *What coherence can work with.* |
 | **Coherence** | Organized flows of energy, time, and information that maintain a pattern through time. *What holds capacities together.* |
-| **Potential** | The direction coherence "wants" to grow in: increased complexity, feeling, mutuality, future possibilities. *Where the pattern leans.* |
+| **Potential** | The range of feasible changes and future configurations, given material constraints, relationships, history, and uncertainty. Some possibilities support flourishing; others sustain or increase harm. *What could become possible, not what must happen.* |
 
 **Relationship:**
 > Capacity is what Coherence works with.
 > Coherence is the pattern that holds Capacity through time.
-> Potential is where that Coherence tends to lean.
+> Potential is the range of changes available from this configuration.
 
-These are coupled, not strictly causal. New Capacity can shift Potential, which pressures Coherence to re-pattern.
+These are coupled, not strictly causal. New Capacity may change Potential; new conditions may allow Coherence to reorganize.
+
+**No built-in ethical destination:** Neither complexity nor intelligence entails mutuality, care, moral worth, or a preferred evolutionary direction. PCC describes possible configurations; PMN/VAE supplies the openly chosen ethical orientation. Claims about which possibilities will occur require evidence, not teleology.
 
 ## Memory
 
@@ -132,7 +134,7 @@ A system with adaptive memory can learn, adjust, respond to feedback. A system w
 |------|------------|
 | **Violate** | Actively harm, invade, overexpose |
 | **Abandon** | See harm and walk away; refuse repair; organized neglect |
-| **Exploit** | Use another's life/CEC as resource without reciprocity |
+| **Exploit** | Coerce, dispossess, or unfairly appropriate another's capacities or essential support while shifting avoidable costs onto them. Receiving more care than one can return is **not** exploitation. |
 
 ## The Non-Negotiable Rule
 
@@ -292,10 +294,16 @@ State:      CR    ←────────────────→   HR
 
 **Dynamic:** Every time CEC falls short, CD grows.
 
+### Unconditional Consideration, Situated Obligations
+
+**Ethical commitment:** The moral consideration owed to a being does not depend on productivity, independence, usefulness, or ability to reciprocate. Human dignity is unconditional; the Gaian stance also requires serious consideration of nonhuman lives and ecological dependencies. Different beings have different needs and forms of protection; this is not a claim that all needs are identical or every need can always be met.
+
+Care follows need and vulnerability. Responsibilities for provision, distribution, and repair follow relevant capacity, agency, and institutional power. A child, disabled person, dependent elder, or rescued animal does not incur moral debt by requiring extensive care. When resources genuinely conflict, identify constraints, urgent needs, affected perspectives, alternatives, and review or appeal mechanisms; never treat ability to pay back as a measure of worth.
+
 **For each group/being, ask:**
 - **CEC-dependent:** who must receive care to exist?
 - **CEC-contributors:** who actively holds CEC up? (nurses, cleaners, mechanics, pollinators, soil, etc.)
-- **CEC-drainers:** who consumes CEC heavily while giving little or nothing back?
+- **CEC-diverters (conduct, not dependency):** which actors with decision-making power divert shared care resources or impose avoidable deprivation on others? Name the specific practice and evidence; do not label high-need recipients as drains.
 
 ## Axis 2: Flow (CF ↔ HD)
 
@@ -306,7 +314,7 @@ State:      CR    ←────────────────→   HR
 
 **Key insight:** HD names what mystification hides — when harm happens, **someone collects the dividend.**
 
-Every "externality" in Babylon's accounting is someone's HR becoming someone else's HD.
+Some so-called "externalities" are someone’s HR made profitable to another actor (HD). Other harms may have no clear beneficiary; they still matter. Trace mechanisms, beneficiaries where identifiable, affected beings, and uncertainties rather than presuming a dividend in every case.
 
 ## Axis 3: State (CR ↔ HR)
 
@@ -321,21 +329,23 @@ Every "externality" in Babylon's accounting is someone's HR becoming someone els
 
 | Term | Definition |
 |------|------------|
-| **RS — Regenerative Surplus** | The portion of CR above survival baseline that is **not built on HD or unpaid CD** and can be used to: lift future CEC, repair CD and HR (reparations, restoration, healing), or seed new Gaian experiments. |
+| **RS — Regenerative Surplus** | The portion of CR above survival needs that does not depend on concealed harm or unjustly unmet care obligations, with material impacts and repair duties accounted for. It can support future CEC, repair CD and HR, or seed new Gaian experiments. RS is a claim requiring evidence, not an automatic label for growth. |
 
 ### The Moral Condition (Non-Negotiable)
 
-> ⚠️ If "surplus" exists while CD is huge, HR is high, and HD is roaring, that "surplus" is explicitly **not RS** — it's domination luxury.
+> ⚠️ A claimed surplus is not regenerative if it relies on hiding serious harms, coercing care labor, or withholding essential care while declaring the remaining benefit a success.
 
-RS requires:
-- No hidden victims
-- Active effort to reduce CD/HR over time
+**"No hidden victims" is a demanding duty of inquiry, disclosure, and repair—not a claim of omniscience or that every action has zero impact.** An RS claim requires:
+- Identify known and reasonably foreseeable harms, affected beings, responsible actors, and evidentiary gaps; actively seek perspectives that may be missing.
+- Document material trade-offs, unresolved consent, mitigation, repair duties, and the time horizon; do not erase harms through net-benefit arithmetic.
+- Make sustained efforts to reduce CD/HR, with evidence of outcomes and a way for affected parties to challenge the designation.
+- Withhold or qualify the RS designation when serious unresolved harm plausibly underwrites the apparent surplus.
 
 ### Anti-Co-optation Lock
 
-> **If the "no hidden victims" condition on RS is removed, CEFR collapses into a generic benefit/growth model and becomes easily co-optable.**
+> **If the duty to identify and confront harmed beings is removed from RS, CEFR risks becoming a generic benefit/growth model easily used to disguise extraction.**
 
-This condition is a load-bearing wall. Without it, billionaire philanthropy counts as regenerative. With it, we must ask: "What CD and HR funded this surplus? Who absorbed the harm?"
+This is a load-bearing ethical constraint, not a claim to perfect information. A large charitable benefit does not automatically count as regenerative if its financing or operation creates unacknowledged care debt or harm. Ask: "What CD and HR funded this surplus? Who absorbed the harm? What have we not yet checked?"
 
 ## Ambiguous Flows
 
@@ -362,17 +372,17 @@ These rules apply across all four roots.
 
 ## Rule 1: Truthful Speech of Care
 
-In this grammar, saying "I/we care" is only valid if:
+When claiming care was delivered, ask:
 
-1. We can map **who → did what → to whom**
-2. We can show a **change in CEC, CF, CR** for concrete beings
+1. Can we map **who → did what → to whom**?
+2. What actions or changes in **CEC, CF, or CR** can we substantiate for concrete beings, and what remains uncertain? Witnessing, refusing harm, and grieving matter even where measurable improvement is not yet possible.
 
 **Corollaries:**
 - Don't rename harm as care
 - Don't present extraction as neutrality
 - Always say who benefits, who pays, and how you know
 
-> Abstract "we care about X" without changed flows = **signal, not care.**
+> A declaration of care without evidence of action is an expression of intent, not proof that care was delivered or effective.
 
 ### Grounded Sensing
 
@@ -423,7 +433,7 @@ Lingua Gaiana is:
 - Is the system sensing reality or suppressing feedback?
 
 ### Step 3: CEFR
-- **CEC:** Who depends / who contributes / who drains?
+- **CEC:** Who needs care / who provides it / who controls or diverts its provision?
 - **CF/HD:** Who does what to whom (PMN or VAE)? Where does the dividend go?
 - **CR/HR:** Who gets Care Return? Who absorbs Harm Return?
 - **CD:** What Care Debt has accumulated?
